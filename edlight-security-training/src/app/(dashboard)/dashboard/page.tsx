@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   CheckCircle2,
@@ -10,15 +11,28 @@ import {
   Flame,
   Bell,
 } from "lucide-react";
+import { doc, getDoc } from "firebase/firestore";
 import ModuleCard from "@/components/ModuleCard";
 import ProgressBar from "@/components/ProgressBar";
 import { modules } from "@/data/modules";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/hooks/useProgress";
+import { db } from "@/lib/firebase";
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const { getModuleProgress, loading } = useProgress(user?.uid);
+  const [profile, setProfile] = useState<{ jobTitle: string; department: string } | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    getDoc(doc(db, "users", user.uid)).then((snap) => {
+      if (snap.exists()) {
+        const d = snap.data();
+        setProfile({ jobTitle: d.jobTitle ?? "", department: d.department ?? "" });
+      }
+    });
+  }, [user]);
 
   const completedCount = modules.filter(
     (m) => getModuleProgress(m.id).status === "completed"
@@ -42,6 +56,11 @@ export default function DashboardPage() {
         <div>
           <p className="text-sm text-slate-500 mb-1">Welcome back,</p>
           <h1 className="text-2xl font-bold text-slate-900">{user?.displayName ?? "—"}</h1>
+          {(profile?.jobTitle || profile?.department) && (
+            <p className="text-sm text-teal-600 mt-0.5">
+              {[profile.jobTitle, profile.department].filter(Boolean).join(" · ")}
+            </p>
+          )}
         </div>
         <div className="flex items-center gap-2 text-xs text-slate-500 bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm">
           <Bell className="h-4 w-4 text-slate-400" />

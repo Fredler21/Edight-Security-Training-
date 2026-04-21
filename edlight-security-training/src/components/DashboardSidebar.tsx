@@ -11,9 +11,12 @@ import {
   ChevronRight,
   LogOut,
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
 import { cn } from "@/lib/cn";
 import { useAuth } from "@/context/AuthContext";
 import { signOut } from "@/lib/auth";
+import { db } from "@/lib/firebase";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -26,6 +29,20 @@ export default function DashboardSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user } = useAuth();
+  const [profile, setProfile] = useState<{ jobTitle: string; department: string } | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    getDoc(doc(db, "users", user.uid)).then((snap) => {
+      if (snap.exists()) {
+        const d = snap.data();
+        setProfile({
+          jobTitle: d.jobTitle ?? "",
+          department: d.department ?? "",
+        });
+      }
+    });
+  }, [user]);
 
   const initials = user?.displayName
     ? user.displayName
@@ -103,7 +120,13 @@ export default function DashboardSidebar() {
             <p className="text-sm font-medium text-white truncate">
               {user?.displayName ?? "—"}
             </p>
-            <p className="text-xs text-slate-400 truncate">{user?.email ?? ""}</p>
+            {profile?.jobTitle || profile?.department ? (
+              <p className="text-xs text-teal-400 truncate">
+                {[profile.jobTitle, profile.department].filter(Boolean).join(" · ")}
+              </p>
+            ) : (
+              <p className="text-xs text-slate-400 truncate">{user?.email ?? ""}</p>
+            )}
           </div>
         </div>
         <button

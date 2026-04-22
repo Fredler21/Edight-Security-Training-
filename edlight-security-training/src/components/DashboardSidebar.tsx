@@ -55,7 +55,7 @@ export default function DashboardSidebar() {
 
   async function handleSignOut() {
     await signOut();
-    router.replace("/login");
+    router.replace("/");
   }
 
   return (

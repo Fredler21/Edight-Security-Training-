@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   Shield,
   LayoutDashboard,
@@ -75,9 +76,13 @@ export default function DashboardSidebar() {
     <aside className="flex flex-col w-64 min-h-screen bg-slate-900 border-r border-slate-800">
       {/* Logo */}
       <div className="flex items-center gap-2.5 h-16 px-6 border-b border-slate-800">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-600">
-          <Shield className="h-4.5 w-4.5 text-white" strokeWidth={2.5} />
-        </div>
+        <Image
+          src="/edlight-logo-white.png"
+          alt="EdLight logo"
+          width={32}
+          height={32}
+          className="rounded-lg opacity-90"
+        />
         <span className="text-[15px] font-semibold text-white tracking-tight">
           EdLight<span className="text-teal-400"> Security</span>
         </span>

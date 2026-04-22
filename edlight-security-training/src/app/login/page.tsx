@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { Shield, AlertCircle, Loader2 } from "lucide-react";
 import { signInWithGoogle } from "@/lib/auth";
 import { useAuth } from "@/context/AuthContext";
@@ -50,8 +51,8 @@ export default function LoginPage() {
         <div className="bg-white rounded-2xl shadow-2xl p-8">
           {/* Logo */}
           <div className="flex flex-col items-center mb-8">
-            <div className="h-14 w-14 rounded-2xl bg-teal-600 flex items-center justify-center shadow-lg mb-5">
-              <Shield className="h-7 w-7 text-white" strokeWidth={2.5} />
+            <div className="h-14 w-14 rounded-2xl bg-slate-900 flex items-center justify-center shadow-lg mb-5 overflow-hidden">
+              <Image src="/edlight-logo-white.png" alt="EdLight logo" width={56} height={56} />
             </div>
             <h1 className="text-xl font-bold text-slate-900 text-center">
               EdLight Security Training

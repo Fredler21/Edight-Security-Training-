@@ -1,43 +1,55 @@
+"use client";
+
 import Link from "next/link";
+import Image from "next/image";
+import { useTheme } from "@/context/ThemeContext";
 
 export default function PublicFooter() {
+  const { theme } = useTheme();
+  const dark = theme === "dark";
+
+  const border = dark ? "rgba(255,255,255,0.06)" : "rgba(15,23,42,0.08)";
+  const bg = dark ? "#000000" : "#f8fafc";
+  const textMid = dark ? "rgba(255,255,255,0.45)" : "rgba(15,23,42,0.45)";
+  const textSub = dark ? "rgba(255,255,255,0.22)" : "rgba(15,23,42,0.25)";
+
   return (
-    <footer className="bg-stone-100 border-t border-stone-200">
-      <div className="flex flex-col md:flex-row justify-between items-center w-full px-8 py-12 max-w-7xl mx-auto">
+    <footer style={{ borderTop: `1px solid ${border}`, padding: "52px clamp(24px, 5vw, 64px)", backgroundColor: bg, transition: "background-color 0.3s" }}>
+      <div style={{ maxWidth: "1280px", margin: "0 auto", display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "24px" }}>
         {/* Brand */}
-        <div className="mb-8 md:mb-0">
-          <div
-            className="font-semibold text-lg text-[#4a7c59] mb-4 text-center md:text-left"
-            style={{ fontFamily: "var(--font-literata), Literata, serif" }}
-          >
-            EdLight Security
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: "9px", marginBottom: "10px" }}>
+            <Image
+              src={dark ? "/edlight-logo-white.png" : "/edlight-logo-navy.png"}
+              alt="EdLight logo"
+              width={20}
+              height={20}
+            />
+            <span style={{ fontSize: "14px", fontWeight: 600, color: textMid, letterSpacing: "-0.01em" }}>
+              EdLight Security Training
+            </span>
           </div>
-          <p className="text-sm text-stone-500 max-w-xs text-center md:text-left">
-            The modern standard for security awareness training. Rooted in protection.
+          <p style={{ fontSize: "12px", color: textSub, maxWidth: "300px", lineHeight: 1.6 }}>
+            Building security-aware organizations through practical, people-first training.
           </p>
         </div>
 
-        {/* Links */}
-        <div className="flex flex-wrap justify-center gap-8 mb-8 md:mb-0">
-          {[
-            { label: "Training Modules", href: "#modules" },
-            { label: "Why It Matters", href: "#" },
-            { label: "IT Helpdesk", href: "mailto:it@edlight.org" },
-            { label: "Report a Threat", href: "mailto:security@edlight.org" },
-          ].map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className="text-stone-500 hover:text-stone-900 transition-all text-sm"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </div>
-
-        {/* Copyright */}
-        <div className="text-stone-500 text-sm">
-          © {new Date().getFullYear()} EdLight Security. Rooted in protection.
+        {/* Links + copyright */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "14px" }}>
+          <div style={{ display: "flex", gap: "24px" }}>
+            {[
+              { label: "Contact", href: "/contact" },
+              { label: "Privacy", href: "/privacy" },
+              { label: "Terms", href: "/terms" },
+            ].map((item) => (
+              <Link key={item.label} href={item.href} style={{ fontSize: "13px", color: textSub, textDecoration: "none" }}>
+                {item.label}
+              </Link>
+            ))}
+          </div>
+          <p style={{ fontSize: "12px", color: textSub }}>
+            © {new Date().getFullYear()} EdLight. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

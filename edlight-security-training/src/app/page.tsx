@@ -1,806 +1,514 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import PublicNavbar from "@/components/PublicNavbar";
 import PublicFooter from "@/components/PublicFooter";
 import { useTheme } from "@/context/ThemeContext";
 
-const features = [
-  {
-    icon: "lock",
-    number: "01",
-    title: "Structured Training",
-    description:
-      "Five focused modules covering the most critical cybersecurity topics — designed for real employees, not security experts.",
-  },
-  {
-    icon: "analytics",
-    number: "02",
-    title: "Progress Tracking",
-    description:
-      "Every employee can see exactly where they stand. Know which modules are done, in progress, or waiting — at a glance.",
-  },
-  {
-    icon: "quiz",
-    number: "03",
-    title: "Quiz-Based Learning",
-    description:
-      "Each module ends with scenario-based questions that reinforce concepts and help knowledge stick long after training.",
-  },
-  {
-    icon: "passkey",
-    number: "04",
-    title: "Secure Google Login",
-    description:
-      "Sign in with your EdLight Google account. No new passwords. Access is restricted to @edlight.org only.",
-  },
-  {
-    icon: "manage_accounts",
-    number: "05",
-    title: "Admin Visibility",
-    description:
-      "Administrators get full visibility into who has completed training and who still needs to finish.",
-  },
-  {
-    icon: "psychology",
-    number: "06",
-    title: "Real-World Scenarios",
-    description:
-      "Every module includes examples drawn from actual security incidents — so employees understand why it matters.",
-  },
-];
-
-const steps = [
-  {
-    step: "01",
-    icon: "login",
-    title: "Sign in securely",
-    description: "Use your @edlight.org Google account — no new passwords, no friction.",
-  },
-  {
-    step: "02",
-    icon: "menu_book",
-    title: "Work through modules",
-    description: "Short, focused lessons you can complete in a single sitting.",
-  },
-  {
-    step: "03",
-    icon: "quiz",
-    title: "Pass the quiz",
-    description: "Scenario-based questions confirm you understood what matters.",
-  },
-  {
-    step: "04",
-    icon: "verified",
-    title: "Track your progress",
-    description: "See every completed module and your overall training score at a glance.",
-  },
-];
-
-export default function HomePage() {
+export default function LandingPage() {
+  const [mounted, setMounted] = useState(false);
+  const [hoverCard, setHoverCard] = useState<number | null>(null);
   const { theme } = useTheme();
-  const isDark = theme === "dark";
+  const dark = theme === "dark";
+
+  useEffect(() => { setMounted(true); }, []);
+
+  const bg = dark ? "#080c14" : "#ffffff";
+  const surface = dark ? "#0f1724" : "#f8fafc";
+  const surfaceAlt = dark ? "#141d2e" : "#f1f5f9";
+  const border = dark ? "rgba(255,255,255,0.07)" : "rgba(15,23,42,0.08)";
+  const cardBg = dark ? "rgba(15,23,42,0.96)" : "#ffffff";
+  const text = dark ? "#f1f5f9" : "#0f172a";
+  const textMuted = dark ? "rgba(255,255,255,0.45)" : "rgba(15,23,42,0.5)";
+  const blue = "#0ea5e9";
+  const blueLight = "#38bdf8";
+  const blueDeep = "#0369a1";
+
+  const features = [
+    { icon: "shield_lock", title: "Phishing Defense", desc: "Realistic simulated attacks train employees to spot and report phishing emails before damage occurs.", color: blue, glow: "rgba(14,165,233,0.12)" },
+    { icon: "lock_person", title: "Access Control", desc: "Best practices for password hygiene, MFA, and principle of least privilege across your organization.", color: "#6366f1", glow: "rgba(99,102,241,0.12)" },
+    { icon: "devices", title: "Device & Data Safety", desc: "Training on secure remote work, BYOD policies, and safe handling of sensitive company information.", color: "#0891b2", glow: "rgba(8,145,178,0.12)" },
+    { icon: "manage_accounts", title: "Admin Dashboard", desc: "Real-time completion tracking, automated reminders, and compliance reports for your entire team.", color: "#7c3aed", glow: "rgba(124,58,237,0.12)" },
+  ];
+
+  const steps = [
+    { num: "01", title: "Assign Modules", desc: "Select training modules and assign them to individuals, departments, or your entire organization in seconds." },
+    { num: "02", title: "Employees Learn", desc: "Staff complete short, engaging lessons with interactive quizzes at their own pace, on any device." },
+    { num: "03", title: "Track & Report", desc: "Monitor progress in real time. Export compliance reports with one click for audits or leadership review." },
+  ];
+
+  const stats = [
+    { val: "95%", label: "Completion rate" },
+    { val: "3×", label: "Faster onboarding" },
+    { val: "<8 min", label: "Per module" },
+    { val: "100%", label: "Audit-ready" },
+  ];
+
+  const dashRows = [
+    { name: "Engineering", pct: 88, color: blue },
+    { name: "Marketing", pct: 100, color: "#10b981", done: true },
+    { name: "Finance", pct: 73, color: "#6366f1" },
+    { name: "Legal", pct: 94, color: "#0891b2" },
+  ];
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: isDark ? "#141a16" : "#faf6f0", color: isDark ? "#f0ece4" : "#2e3230" }}>
+    <div style={{ backgroundColor: bg, minHeight: "100vh", color: text, transition: "background-color 0.35s, color 0.35s", overflowX: "hidden" }}>
+      <style>{`
+        @keyframes shimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(22px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeRight {
+          from { opacity: 0; transform: translateX(28px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes floatOrb {
+          0%, 100% { transform: translate(0,0) scale(1); }
+          33% { transform: translate(28px,-38px) scale(1.04); }
+          66% { transform: translate(-18px,18px) scale(0.97); }
+        }
+        @keyframes gridPulse {
+          0%, 100% { opacity: 0.35; }
+          50% { opacity: 0.52; }
+        }
+        @keyframes pulse-dot {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.5; transform: scale(0.8); }
+        }
+        @keyframes float-card {
+          0%, 100% { transform: translateY(0px) rotate(-1deg); }
+          50% { transform: translateY(-10px) rotate(-1deg); }
+        }
+        @keyframes badge-1 {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-7px); }
+        }
+        @keyframes badge-2 {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-9px); }
+        }
+        @keyframes badge-3 {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-5px); }
+        }
+        @keyframes spin-ring {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .primary-btn {
+          background-image: linear-gradient(135deg, ${blueDeep} 0%, ${blue} 50%, ${blueDeep} 100%);
+          background-size: 200% auto;
+          animation: shimmer 4s linear infinite;
+          transition: filter 0.18s, transform 0.18s;
+        }
+        .primary-btn:hover { filter: brightness(1.12); transform: translateY(-1px); }
+        .ghost-btn { transition: background 0.18s, border-color 0.18s, transform 0.18s; }
+        .ghost-btn:hover { background: rgba(14,165,233,0.07) !important; border-color: rgba(14,165,233,0.3) !important; transform: translateY(-1px); }
+        .feature-card { transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease; cursor: default; }
+        .feature-card:hover { transform: translateY(-5px); }
+        .step-card { transition: transform 0.22s ease, box-shadow 0.22s ease; }
+        .step-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(14,165,233,0.13) !important; }
+        .step-num { background: linear-gradient(135deg, ${blueDeep}, ${blue}); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        @keyframes gradient-shift {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        .headline-accent {
+          background-image: linear-gradient(120deg, ${blueDeep} 0%, ${blueLight} 35%, #67e8f9 50%, ${blueLight} 65%, ${blueDeep} 100%);
+          background-size: 220% auto;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: gradient-shift 6s ease-in-out infinite;
+        }
+        @keyframes scale-in {
+          from { opacity: 0; transform: scale(0.92) translateY(10px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .hero-card-zoom { animation: float-card 6s ease-in-out infinite, scale-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both; }
+      `}</style>
+
       <PublicNavbar />
 
-      <main className="overflow-x-hidden">
+      {/* ══════════════════════════════════════════════════════════════
+          HERO  —  2-column: text left, dashboard visual right
+      ══════════════════════════════════════════════════════════════ */}
+      <section id="platform" style={{ position: "relative", display: "flex", alignItems: "center", overflow: "hidden", paddingTop: "64px" }}>
 
-        {/* ══════════════════════════════════════════════════
-            HERO — dark immersive header
-        ══════════════════════════════════════════════════ */}
-        <section
-          className="relative pt-32 pb-0 overflow-hidden"
-          style={{ backgroundColor: "#141a16" }}
-        >
-          {/* Background grid overlay */}
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              backgroundImage:
-                "linear-gradient(rgba(74,124,89,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(74,124,89,0.06) 1px, transparent 1px)",
-              backgroundSize: "48px 48px",
-            }}
-          />
+        {/* Animated dot-grid background */}
+        <div aria-hidden style={{ position: "absolute", inset: 0, backgroundImage: dark ? "radial-gradient(circle, rgba(56,189,248,0.17) 1px, transparent 1px)" : "radial-gradient(circle, rgba(14,165,233,0.11) 1px, transparent 1px)", backgroundSize: "40px 40px", animation: "gridPulse 6s ease-in-out infinite" }} />
 
-          {/* Glow orbs */}
-          <div
-            className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full blur-[120px]"
-            style={{ backgroundColor: "rgba(74,124,89,0.18)" }}
-          />
-          <div
-            className="pointer-events-none absolute top-10 right-0 w-[400px] h-[400px] rounded-full blur-[100px]"
-            style={{ backgroundColor: "rgba(112,92,48,0.12)" }}
-          />
+        {/* Ambient orbs */}
+        <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+          <div style={{ position: "absolute", top: "8%", left: "4%", width: "520px", height: "520px", borderRadius: "50%", background: dark ? "radial-gradient(circle, rgba(14,165,233,0.1), transparent 70%)" : "radial-gradient(circle, rgba(14,165,233,0.07), transparent 70%)", filter: "blur(2px)", animation: "floatOrb 22s ease-in-out infinite" }} />
+          <div style={{ position: "absolute", bottom: "8%", right: "5%", width: "400px", height: "400px", borderRadius: "50%", background: dark ? "radial-gradient(circle, rgba(99,102,241,0.1), transparent 70%)" : "radial-gradient(circle, rgba(99,102,241,0.07), transparent 70%)", filter: "blur(2px)", animation: "floatOrb 28s ease-in-out infinite reverse" }} />
+        </div>
 
-          <div className="relative max-w-7xl mx-auto px-6">
-            {/* Badge */}
-            <div className="flex justify-center mb-10">
-              <span
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest"
-                style={{
-                  backgroundColor: "rgba(74,124,89,0.15)",
-                  color: "#6eba8a",
-                  border: "1px solid rgba(74,124,89,0.3)",
-                }}
-              >
-                <span
-                  className="h-1.5 w-1.5 rounded-full inline-block"
-                  style={{ backgroundColor: "#6eba8a" }}
-                />
-                EdLight Security Training
-                <span
-                  className="ml-2 px-2 py-0.5 rounded-md text-[10px] font-extrabold tracking-widest"
-                  style={{
-                    backgroundColor: "rgba(74,124,89,0.3)",
-                    color: "#6eba8a",
-                    border: "1px solid rgba(74,124,89,0.5)",
-                  }}
-                >
-                  v2
-                </span>
+        {/* 2-column grid — asymmetric: text 5fr, image 7fr */}
+        <div style={{ position: "relative", zIndex: 2, maxWidth: "1240px", margin: "0 auto", width: "100%", padding: "40px clamp(20px, 5vw, 56px) 110px", display: "grid", gridTemplateColumns: "minmax(320px, 5fr) minmax(360px, 7fr)", gap: "clamp(32px, 4vw, 56px)", alignItems: "center" }}>
+
+          {/* ── Left: text ── */}
+          <div style={{ opacity: mounted ? 1 : 0, animation: mounted ? "fadeUp 0.7s ease both" : "none" }}>
+
+            {/* Badge with two-tone label */}
+            <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: dark ? "rgba(14,165,233,0.08)" : "rgba(14,165,233,0.07)", border: `1px solid ${dark ? "rgba(14,165,233,0.2)" : "rgba(14,165,233,0.16)"}`, borderRadius: "100px", padding: "6px 16px 6px 10px", marginBottom: "28px" }}>
+              <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: blue, display: "inline-block", flexShrink: 0, animation: "pulse-dot 2s ease-in-out infinite" }} />
+              <span style={{ fontSize: "12px", fontWeight: 600, letterSpacing: "0.04em" }}>
+                <span style={{ color: dark ? "rgba(255,255,255,0.6)" : "rgba(15,23,42,0.55)" }}>EdLight</span>
+                {" "}
+                <span style={{ background: `linear-gradient(135deg, ${blueDeep}, ${blueLight})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Security Training</span>
               </span>
             </div>
 
             {/* Headline */}
-            <div className="text-center max-w-4xl mx-auto mb-8">
-              <h1
-                className="text-5xl md:text-7xl font-extrabold leading-[1.05] mb-6 tracking-tight"
-                style={{
-                  fontFamily: "var(--font-literata), Literata, serif",
-                  color: "#f0ece4",
-                }}
-              >
-                Build a Stronger{" "}
-                <span
-                  style={{
-                    color: "#6eba8a",
-                    display: "block",
-                  }}
-                >
-                  Security Culture.
-                </span>
-              </h1>
-              <p
-                className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto"
-                style={{ color: "rgba(240,236,228,0.6)" }}
-              >
-                Short, focused cybersecurity training every EdLight employee can complete in
-                under an hour — built to protect the people, data, and systems you rely on.
-              </p>
-            </div>
+            <h1 style={{ fontSize: "clamp(36px, 5vw, 62px)", fontWeight: 800, lineHeight: 1.06, letterSpacing: "-0.03em", color: text, margin: "0 0 20px" }}>
+              Security awareness<br />
+              <span className="headline-accent">
+                your team will finish.
+              </span>
+            </h1>
 
-            {/* CTA row */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-              <Link
-                href="/login"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-base transition-all hover:-translate-y-0.5 hover:opacity-90"
-                style={{
-                  backgroundColor: "#4a7c59",
-                  color: "#ffffff",
-                  boxShadow: "0 0 32px rgba(74,124,89,0.4), 0 4px 16px rgba(0,0,0,0.3)",
-                }}
-              >
-                <span className="material-symbols-outlined text-xl">login</span>
-                Start Training Now
+            <p style={{ fontSize: "clamp(15px, 1.7vw, 17.5px)", color: textMuted, lineHeight: 1.7, maxWidth: "480px", margin: "0 0 30px", fontWeight: 400 }}>
+              EdLight turns mandatory security training into short, engaging lessons with admin tracking, automated reminders, and audit-ready reports.
+            </p>
+
+            {/* CTAs */}
+            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "28px" }}>
+              <Link href="/login" className="primary-btn" style={{ display: "inline-block", color: "#fff", fontWeight: 700, fontSize: "15px", padding: "13px 32px", borderRadius: "10px", textDecoration: "none", letterSpacing: "-0.01em", boxShadow: "0 4px 24px rgba(14,165,233,0.28)" }}>
+                Start Training
               </Link>
-              <p
-                className="text-sm flex items-center gap-1.5"
-                style={{ color: "rgba(240,236,228,0.4)" }}
-              >
-                <span className="material-symbols-outlined text-base">lock</span>
-                Restricted to @edlight.org accounts
-              </p>
             </div>
 
-            {/* Hero dashboard card */}
-            <div className="relative max-w-2xl mx-auto">
-              {/* Card glow */}
-              <div
-                className="absolute inset-x-0 bottom-0 h-24 blur-2xl rounded-full mx-auto w-3/4"
-                style={{ backgroundColor: "rgba(74,124,89,0.25)" }}
-              />
-              <div
-                className="relative rounded-t-3xl overflow-hidden"
-                style={{
-                  backgroundColor: "#1e2820",
-                  border: "1px solid rgba(74,124,89,0.2)",
-                  borderBottom: "none",
-                  boxShadow: "0 -8px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
-                }}
-              >
-                {/* Window chrome */}
-                <div
-                  className="flex items-center gap-2 px-5 py-3.5"
-                  style={{ borderBottom: "1px solid rgba(74,124,89,0.15)" }}
-                >
-                  <span className="h-3 w-3 rounded-full" style={{ backgroundColor: "#b83230" }} />
-                  <span className="h-3 w-3 rounded-full" style={{ backgroundColor: "#705c30" }} />
-                  <span className="h-3 w-3 rounded-full" style={{ backgroundColor: "#4a7c59" }} />
-                  <span
-                    className="ml-4 text-xs font-mono"
-                    style={{ color: "rgba(240,236,228,0.3)" }}
-                  >
-                    EdLight Security Training — Dashboard
-                  </span>
-                </div>
-
-                {/* Dashboard content */}
-                <div className="p-6">
-                  {/* Header row */}
-                  <div className="flex items-center justify-between mb-5">
-                    <div>
-                      <p
-                        className="text-xs font-semibold uppercase tracking-widest mb-0.5"
-                        style={{ color: "rgba(240,236,228,0.4)" }}
-                      >
-                        Your Progress
-                      </p>
-                      <p
-                        className="text-base font-bold"
-                        style={{
-                          color: "#f0ece4",
-                          fontFamily: "var(--font-literata), Literata, serif",
-                        }}
-                      >
-                        Security Training
-                      </p>
-                    </div>
-                    <div
-                      className="h-9 w-9 rounded-xl flex items-center justify-center"
-                      style={{
-                        backgroundColor: "rgba(74,124,89,0.2)",
-                        border: "1px solid rgba(74,124,89,0.3)",
-                      }}
-                    >
-                      <span
-                        className="material-symbols-outlined text-xl"
-                        style={{ color: "#6eba8a" }}
-                      >
-                        shield
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Progress bar */}
-                  <div className="mb-5">
-                    <div
-                      className="flex justify-between text-xs mb-2"
-                      style={{ color: "rgba(240,236,228,0.4)" }}
-                    >
-                      <span>Overall completion</span>
-                      <span className="font-semibold" style={{ color: "#6eba8a" }}>
-                        40%
-                      </span>
-                    </div>
-                    <div
-                      className="h-1.5 rounded-full overflow-hidden"
-                      style={{ backgroundColor: "rgba(255,255,255,0.08)" }}
-                    >
-                      <div
-                        className="h-1.5 w-[40%] rounded-full"
-                        style={{
-                          background: "linear-gradient(90deg, #4a7c59, #6eba8a)",
-                          boxShadow: "0 0 12px rgba(110,186,138,0.5)",
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Module list */}
-                  <div className="space-y-2">
-                    {[
-                      { title: "Password Security", done: true },
-                      { title: "Phishing Awareness", done: true },
-                      { title: "Safe Browsing", active: true },
-                      { title: "Company Access Policy" },
-                      { title: "Device & Network Security" },
-                    ].map((m) => (
-                      <div
-                        key={m.title}
-                        className="flex items-center gap-3 rounded-xl px-3.5 py-2.5"
-                        style={{
-                          backgroundColor: m.active
-                            ? "rgba(74,124,89,0.12)"
-                            : "rgba(255,255,255,0.04)",
-                          border: m.active
-                            ? "1px solid rgba(74,124,89,0.3)"
-                            : "1px solid rgba(255,255,255,0.06)",
-                        }}
-                      >
-                        <span
-                          className="material-symbols-outlined text-base flex-shrink-0"
-                          style={{
-                            color: m.done ? "#6eba8a" : m.active ? "#c4a852" : "rgba(240,236,228,0.2)",
-                            fontVariationSettings: m.done ? "'FILL' 1" : "'FILL' 0",
-                          }}
-                        >
-                          {m.done
-                            ? "check_circle"
-                            : m.active
-                            ? "pending"
-                            : "radio_button_unchecked"}
-                        </span>
-                        <span
-                          className="text-sm flex-1"
-                          style={{
-                            color: m.done
-                              ? "rgba(240,236,228,0.35)"
-                              : m.active
-                              ? "#f0ece4"
-                              : "rgba(240,236,228,0.45)",
-                            fontWeight: m.active ? 600 : 400,
-                            textDecoration: m.done ? "line-through" : "none",
-                          }}
-                        >
-                          {m.title}
-                        </span>
-                        {m.active && (
-                          <span
-                            className="text-xs font-semibold px-2 py-0.5 rounded-full"
-                            style={{
-                              backgroundColor: "rgba(196,168,82,0.15)",
-                              color: "#c4a852",
-                              border: "1px solid rgba(196,168,82,0.25)",
-                            }}
-                          >
-                            In Progress
-                          </span>
-                        )}
-                        {m.done && (
-                          <span
-                            className="text-xs font-semibold px-2 py-0.5 rounded-full"
-                            style={{
-                              backgroundColor: "rgba(74,124,89,0.15)",
-                              color: "#6eba8a",
-                            }}
-                          >
-                            Done
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════════════
-            TRUST STRIP
-        ══════════════════════════════════════════════════ */}
-        <section style={{ backgroundColor: "#111510", borderTop: "1px solid rgba(74,124,89,0.15)" }}>
-          <div className="max-w-7xl mx-auto px-6 py-6">
-            <div className="flex flex-wrap items-center justify-center gap-10 md:gap-16">
-              {[
-                { icon: "verified_user", label: "SOC 2 Aligned" },
-                { icon: "groups", label: "Built for Teams" },
-                { icon: "cloud_done", label: "Google Workspace" },
-                { icon: "schedule", label: "Under 1 Hour" },
-                { icon: "devices", label: "Any Device" },
-              ].map(({ icon, label }) => (
-                <div
-                  key={label}
-                  className="flex items-center gap-2"
-                  style={{ color: "rgba(240,236,228,0.35)" }}
-                >
-                  <span className="material-symbols-outlined text-lg">{icon}</span>
-                  <span className="text-xs font-semibold uppercase tracking-wider">{label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════════════
-            THREAT STATS — dark band
-        ══════════════════════════════════════════════════ */}
-        <section id="why-it-matters" className="relative py-24 overflow-hidden" style={{ backgroundColor: "#1a1f1c" }}>
-          <div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              backgroundImage:
-                "radial-gradient(ellipse 80% 50% at 50% 100%, rgba(74,124,89,0.1) 0%, transparent 70%)",
-            }}
-          />
-          <div className="relative max-w-7xl mx-auto px-6">
-            <div className="text-center mb-16">
-              <p
-                className="text-xs font-bold uppercase tracking-widest mb-4"
-                style={{ color: "#6eba8a" }}
-              >
-                The Problem
-              </p>
-              <h2
-                className="text-4xl md:text-5xl font-bold mb-5"
-                style={{
-                  fontFamily: "var(--font-literata), Literata, serif",
-                  color: "#f0ece4",
-                }}
-              >
-                Most breaches start with a human mistake
-              </h2>
-              <p
-                className="text-lg max-w-2xl mx-auto leading-relaxed"
-                style={{ color: "rgba(240,236,228,0.5)" }}
-              >
-                Attackers don&rsquo;t always target systems — they target people. Phishing,
-                weak passwords, and unguarded devices are the most common entry points.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-px" style={{ backgroundColor: "rgba(74,124,89,0.15)" }}>
-              {[
-                {
-                  stat: "91%",
-                  label: "of cyberattacks begin with a phishing email",
-                  icon: "phishing",
-                  accent: "#b83230",
-                },
-                {
-                  stat: "80%",
-                  label: "of breaches involve weak or stolen credentials",
-                  icon: "key_off",
-                  accent: "#c4a852",
-                },
-                {
-                  stat: "1 in 3",
-                  label: "employees cannot spot a phishing attempt without training",
-                  icon: "person_alert",
-                  accent: "#6eba8a",
-                },
-              ].map(({ stat, label, icon, accent }) => (
-                <div
-                  key={stat}
-                  className="p-10 flex flex-col gap-4"
-                  style={{ backgroundColor: "#1a1f1c" }}
-                >
-                  <div
-                    className="h-12 w-12 rounded-2xl flex items-center justify-center mb-2"
-                    style={{ backgroundColor: `${accent}18`, border: `1px solid ${accent}30` }}
-                  >
-                    <span
-                      className="material-symbols-outlined text-2xl"
-                      style={{ color: accent }}
-                    >
-                      {icon}
-                    </span>
-                  </div>
-                  <p
-                    className="text-5xl font-extrabold leading-none"
-                    style={{
-                      fontFamily: "var(--font-literata), Literata, serif",
-                      color: accent,
-                    }}
-                  >
-                    {stat}
-                  </p>
-                  <p className="text-base leading-relaxed" style={{ color: "rgba(240,236,228,0.55)" }}>
-                    {label}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════════════
-            HOW IT WORKS — light section with steps
-        ══════════════════════════════════════════════════ */}
-        <section id="how-it-works" className="py-28 px-6" style={{ backgroundColor: isDark ? "#1a1f1c" : "#faf6f0" }}>
-          <div className="max-w-7xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-16 items-center">
-              {/* Left text */}
-              <div>
-                <p
-                  className="text-xs font-bold uppercase tracking-widest mb-4"
-                  style={{ color: "#4a7c59" }}
-                >
-                  How It Works
-                </p>
-                <h2
-                  className="text-4xl md:text-5xl font-bold leading-tight mb-6"
-                  style={{
-                    fontFamily: "var(--font-literata), Literata, serif",
-                    color: isDark ? "#f0ece4" : "#2e3230",
-                  }}
-                >
-                  From sign-in to
-                  <br />
-                  certified in one hour.
-                </h2>
-                <p className="text-lg leading-relaxed mb-10" style={{ color: isDark ? "rgba(240,236,228,0.6)" : "#6b6358" }}>
-                  No installations. No lengthy onboarding. Just open your browser, sign in with
-                  Google, and work through five focused modules at your own pace.
-                </p>
-                <Link
-                  href="/login"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
-                  style={{ backgroundColor: "#4a7c59", color: "#ffffff" }}
-                >
-                  <span className="material-symbols-outlined text-lg">arrow_forward</span>
-                  Begin Training
-                </Link>
-              </div>
-
-              {/* Right steps */}
-              <div className="flex flex-col gap-0">
-                {steps.map((s, i) => (
-                  <div key={s.step} className="flex gap-5 group">
-                    {/* Timeline */}
-                    <div className="flex flex-col items-center">
-                      <div
-                        className="h-11 w-11 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all group-hover:scale-105"
-                        style={{
-                          backgroundColor: "#4a7c59",
-                          boxShadow: "0 4px 16px rgba(74,124,89,0.3)",
-                        }}
-                      >
-                        <span className="material-symbols-outlined text-white text-xl">
-                          {s.icon}
-                        </span>
-                      </div>
-                      {i < steps.length - 1 && (
-                        <div
-                          className="w-px flex-1 my-2"
-                          style={{ backgroundColor: "rgba(74,124,89,0.2)", minHeight: "32px" }}
-                        />
-                      )}
-                    </div>
-
-                    {/* Content */}
-                    <div className="pb-8">
-                      <p
-                        className="text-xs font-bold uppercase tracking-widest mb-1"
-                        style={{ color: isDark ? "rgba(240,236,228,0.4)" : "#74796e" }}
-                      >
-                        Step {s.step}
-                      </p>
-                      <h3
-                        className="text-base font-bold mb-1"
-                        style={{ color: isDark ? "#f0ece4" : "#2e3230" }}
-                      >
-                        {s.title}
-                      </h3>
-                      <p className="text-sm leading-relaxed" style={{ color: isDark ? "rgba(240,236,228,0.55)" : "#6b6358" }}>
-                        {s.description}
-                      </p>
-                    </div>
+            {/* Social proof */}
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <div style={{ display: "flex" }}>
+                {[["E","#0369a1"],["M","#6366f1"],["S","#0891b2"],["J","#7c3aed"]].map(([l, c], i) => (
+                  <div key={i} style={{ width: "28px", height: "28px", borderRadius: "50%", background: `linear-gradient(135deg, ${c}, ${c}bb)`, border: `2px solid ${bg}`, marginLeft: i > 0 ? "-7px" : "0", display: "flex", alignItems: "center", justifyContent: "center", transition: "background-color 0.3s" }}>
+                    <span style={{ fontSize: "10px", fontWeight: 700, color: "white" }}>{l}</span>
                   </div>
                 ))}
               </div>
+              <span style={{ fontSize: "13px", color: textMuted }}>
+                Trusted by <strong style={{ color: text, fontWeight: 700 }}>500+</strong> security teams
+              </span>
             </div>
           </div>
-        </section>
 
-        {/* ══════════════════════════════════════════════════
-            STATS STRIP — cream band
-        ══════════════════════════════════════════════════ */}
-        <section
-          style={{
-            backgroundColor: isDark ? "#111510" : "#f0ece4",
-            borderTop: isDark ? "1px solid rgba(74,124,89,0.15)" : "1px solid rgba(196,200,188,0.5)",
-            borderBottom: isDark ? "1px solid rgba(74,124,89,0.15)" : "1px solid rgba(196,200,188,0.5)",
-          }}
-        >
-          <div className="max-w-7xl mx-auto px-6 py-12">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-              {[
-                { value: "5", label: "Training Modules", icon: "menu_book" },
-                { value: "~1 hr", label: "Total Training Time", icon: "schedule" },
-                { value: "5 Topics", label: "Critical Areas Covered", icon: "verified_user" },
-                { value: "@edlight.org", label: "Internal Access Only", icon: "lock" },
-              ].map(({ value, label, icon }) => (
-                <div key={label} className="text-center flex flex-col items-center gap-2">
-                  <div
-                    className="h-10 w-10 rounded-xl flex items-center justify-center mb-1"
-                    style={{ backgroundColor: "rgba(74,124,89,0.1)" }}
-                  >
-                    <span
-                      className="material-symbols-outlined text-xl"
-                      style={{ color: "#4a7c59" }}
-                    >
-                      {icon}
-                    </span>
-                  </div>
-                  <p
-                    className="text-2xl font-extrabold"
-                    style={{
-                      fontFamily: "var(--font-literata), Literata, serif",
-                      color: isDark ? "#f0ece4" : "#2e3230",
-                    }}
-                  >
-                    {value}
-                  </p>
-                  <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: isDark ? "rgba(240,236,228,0.4)" : "#74796e" }}>
-                    {label}
-                  </p>
+          {/* ── Right: Dashboard illustration (zoomed) ── */}
+          <div style={{ position: "relative", height: "clamp(520px, 62vw, 640px)", opacity: mounted ? 1 : 0, animation: mounted ? "fadeRight 0.9s ease 0.18s both" : "none" }}>
+
+            {/* Spinning decorative rings behind card */}
+            <div aria-hidden style={{ position: "absolute", top: "50%", left: "50%", width: "560px", height: "560px", transform: "translate(-50%, -50%)", borderRadius: "50%", border: `1px dashed ${dark ? "rgba(14,165,233,0.16)" : "rgba(14,165,233,0.13)"}`, animation: "spin-ring 40s linear infinite" }} />
+            <div aria-hidden style={{ position: "absolute", top: "50%", left: "50%", width: "440px", height: "440px", transform: "translate(-50%, -50%)", borderRadius: "50%", border: `1px dashed ${dark ? "rgba(99,102,241,0.13)" : "rgba(99,102,241,0.1)"}`, animation: "spin-ring 30s linear infinite reverse" }} />
+
+            {/* Floating notification chips */}
+            <div style={{ position: "absolute", top: "4%", left: "-2%", zIndex: 10, background: cardBg, borderRadius: "12px", padding: "8px 14px", border: `1px solid ${border}`, boxShadow: dark ? "0 4px 20px rgba(0,0,0,0.5)" : "0 4px 20px rgba(16,185,129,0.14)", animation: "badge-1 4.5s ease-in-out infinite", display: "flex", alignItems: "center", gap: "8px" }}>
+              <span className="material-symbols-outlined" style={{ color: "#10b981", fontSize: "15px" }}>check_circle</span>
+              <span style={{ fontSize: "12px", fontWeight: 600, color: text, whiteSpace: "nowrap" }}>Phishing module complete</span>
+            </div>
+
+            <div style={{ position: "absolute", top: "6%", right: "-1%", zIndex: 10, background: cardBg, borderRadius: "12px", padding: "8px 14px", border: `1px solid ${border}`, boxShadow: dark ? "0 4px 20px rgba(0,0,0,0.5)" : "0 4px 20px rgba(99,102,241,0.13)", animation: "badge-2 5.2s ease-in-out infinite", display: "flex", alignItems: "center", gap: "8px" }}>
+              <span className="material-symbols-outlined" style={{ color: "#6366f1", fontSize: "15px" }}>notifications</span>
+              <span style={{ fontSize: "12px", fontWeight: 600, color: text, whiteSpace: "nowrap" }}>Reminder sent to 3 users</span>
+            </div>
+
+            <div style={{ position: "absolute", bottom: "8%", right: "0%", zIndex: 10, background: cardBg, borderRadius: "12px", padding: "8px 14px", border: `1px solid ${border}`, boxShadow: dark ? "0 4px 20px rgba(0,0,0,0.5)" : "0 4px 20px rgba(14,165,233,0.13)", animation: "badge-3 3.8s ease-in-out infinite", display: "flex", alignItems: "center", gap: "8px" }}>
+              <span className="material-symbols-outlined" style={{ color: blue, fontSize: "15px" }}>verified_user</span>
+              <span style={{ fontSize: "12px", fontWeight: 600, color: text, whiteSpace: "nowrap" }}>Compliance report ready</span>
+            </div>
+
+            {/* Main dashboard card */}
+            <div className="hero-card-zoom" style={{ position: "absolute", top: "30px", right: "-2%", left: "2%", bottom: "30px", background: cardBg, borderRadius: "22px", border: `1px solid ${border}`, boxShadow: dark ? "0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04)" : "0 32px 80px rgba(14,165,233,0.18), 0 4px 16px rgba(14,165,233,0.08)", overflow: "hidden" }}>
+
+              {/* Window chrome */}
+              <div style={{ padding: "14px 18px", borderBottom: `1px solid ${border}`, display: "flex", alignItems: "center", gap: "10px", background: dark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)" }}>
+                <div style={{ display: "flex", gap: "5px" }}>
+                  {["#ff5f57","#febc2e","#28c840"].map(c => (
+                    <div key={c} style={{ width: "10px", height: "10px", borderRadius: "50%", background: c }} />
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════════════
-            FEATURES — numbered cards
-        ══════════════════════════════════════════════════ */}
-        <section id="platform-features" className="py-28 px-6" style={{ backgroundColor: isDark ? "#141a16" : "#faf6f0" }}>
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center max-w-2xl mx-auto mb-16">
-              <p
-                className="text-xs font-bold uppercase tracking-widest mb-4"
-                style={{ color: "#4a7c59" }}
-              >
-                Platform Features
-              </p>
-              <h2
-                className="text-4xl md:text-5xl font-bold mb-5"
-                style={{
-                  fontFamily: "var(--font-literata), Literata, serif",
-                  color: isDark ? "#f0ece4" : "#2e3230",
-                }}
-              >
-                Everything you need to train effectively
-              </h2>
-              <p className="text-lg leading-relaxed" style={{ color: isDark ? "rgba(240,236,228,0.55)" : "#6b6358" }}>
-                Built for EdLight employees — simple enough for anyone to use, powerful enough
-                to build a lasting security culture.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {features.map((f) => (
-                <div
-                  key={f.title}
-                  className="group relative p-8 rounded-2xl flex flex-col items-start transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                  style={{
-                    backgroundColor: isDark ? "#1e2820" : "#ffffff",
-                    border: isDark ? "1px solid rgba(74,124,89,0.2)" : "1px solid rgba(196,200,188,0.4)",
-                  }}
-                >
-                  {/* Subtle hover border accent */}
-                  <div
-                    className="absolute inset-x-0 top-0 h-px rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{
-                      background: "linear-gradient(90deg, transparent, #4a7c59, transparent)",
-                    }}
-                  />
-
-                  {/* Number + icon row */}
-                  <div className="flex items-center justify-between w-full mb-6">
-                    <div
-                      className="h-12 w-12 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105"
-                      style={{
-                        backgroundColor: "rgba(74,124,89,0.08)",
-                        border: "1px solid rgba(74,124,89,0.15)",
-                      }}
-                    >
-                      <span
-                        className="material-symbols-outlined text-2xl"
-                        style={{ color: "#4a7c59" }}
-                      >
-                        {f.icon}
-                      </span>
-                    </div>
-                    <span
-                      className="text-4xl font-extrabold leading-none tabular-nums"
-                      style={{
-                        fontFamily: "var(--font-literata), Literata, serif",
-                        color: isDark ? "rgba(74,124,89,0.3)" : "rgba(196,200,188,0.6)",
-                      }}
-                    >
-                      {f.number}
-                    </span>
-                  </div>
-
-                  <h3
-                    className="text-lg font-bold mb-3"
-                    style={{
-                      fontFamily: "var(--font-literata), Literata, serif",
-                      color: isDark ? "#f0ece4" : "#2e3230",
-                    }}
-                  >
-                    {f.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed" style={{ color: isDark ? "rgba(240,236,228,0.55)" : "#6b6358" }}>
-                    {f.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════════════
-            CTA — dark premium block
-        ══════════════════════════════════════════════════ */}
-        <section className="py-20 px-6" style={{ backgroundColor: isDark ? "#0a0e0b" : "#f5f1ea" }}>
-          <div
-            className="relative max-w-5xl mx-auto rounded-3xl overflow-hidden"
-            style={{
-              background: "linear-gradient(135deg, #1e2820 0%, #141a16 60%, #0e1510 100%)",
-              boxShadow: "0 32px 80px rgba(0,0,0,0.2), 0 0 0 1px rgba(74,124,89,0.2)",
-            }}
-          >
-            {/* Background decorations */}
-            <div
-              className="pointer-events-none absolute -top-32 -right-32 w-96 h-96 rounded-full blur-[100px]"
-              style={{ backgroundColor: "rgba(74,124,89,0.2)" }}
-            />
-            <div
-              className="pointer-events-none absolute -bottom-32 -left-32 w-80 h-80 rounded-full blur-[80px]"
-              style={{ backgroundColor: "rgba(112,92,48,0.15)" }}
-            />
-            <div
-              className="pointer-events-none absolute inset-0"
-              style={{
-                backgroundImage:
-                  "linear-gradient(rgba(74,124,89,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(74,124,89,0.04) 1px, transparent 1px)",
-                backgroundSize: "32px 32px",
-              }}
-            />
-
-            <div className="relative px-8 py-16 md:px-20 md:py-20 text-center">
-              {/* Shield icon */}
-              <div
-                className="inline-flex items-center justify-center h-16 w-16 rounded-2xl mb-8"
-                style={{
-                  backgroundColor: "rgba(74,124,89,0.2)",
-                  border: "1px solid rgba(74,124,89,0.35)",
-                  boxShadow: "0 0 40px rgba(74,124,89,0.2)",
-                }}
-              >
-                <span
-                  className="material-symbols-outlined text-3xl"
-                  style={{ color: "#6eba8a", fontVariationSettings: "'FILL' 1" }}
-                >
-                  verified_user
-                </span>
+                <span style={{ fontSize: "11.5px", color: textMuted, fontWeight: 500 }}>Security Training Dashboard</span>
               </div>
 
-              <h2
-                className="text-4xl md:text-5xl font-bold text-white mb-5 leading-tight"
-                style={{ fontFamily: "var(--font-literata), Literata, serif" }}
-              >
-                Ready to strengthen your
-                <br />
-                security knowledge?
-              </h2>
-              <p
-                className="text-lg mb-10 max-w-xl mx-auto leading-relaxed"
-                style={{ color: "rgba(240,236,228,0.55)" }}
-              >
-                Sign in with your EdLight Google account to access all five modules and start
-                building better security habits today.
-              </p>
+              {/* Card body */}
+              <div style={{ padding: "18px 20px" }}>
+                <div style={{ fontSize: "12.5px", fontWeight: 700, color: text, marginBottom: "16px", letterSpacing: "-0.01em" }}>Team Progress · Q2 2026</div>
 
-              <Link
-                href="/login"
-                className="inline-flex items-center justify-center gap-2 px-10 py-4 rounded-xl font-bold text-base transition-all hover:-translate-y-0.5"
-                style={{
-                  backgroundColor: "#4a7c59",
-                  color: "#ffffff",
-                  boxShadow: "0 0 32px rgba(74,124,89,0.4), 0 4px 20px rgba(0,0,0,0.3)",
-                }}
-              >
-                <span className="material-symbols-outlined text-xl">login</span>
-                Sign In with Google
-              </Link>
+                {dashRows.map((row, i) => (
+                  <div key={i} style={{ marginBottom: "13px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "5px" }}>
+                      <span style={{ fontSize: "12px", color: textMuted, fontWeight: 500 }}>{row.name}</span>
+                      <span style={{ fontSize: "12px", fontWeight: 700, color: row.done ? "#10b981" : text }}>{row.pct}%{row.done ? " ✓" : ""}</span>
+                    </div>
+                    <div style={{ height: "5px", borderRadius: "99px", background: dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.06)" }}>
+                      <div style={{ height: "100%", width: `${row.pct}%`, borderRadius: "99px", background: row.color }} />
+                    </div>
+                  </div>
+                ))}
 
-              <p
-                className="mt-6 text-sm flex items-center justify-center gap-1.5"
-                style={{ color: "rgba(240,236,228,0.3)" }}
-              >
-                <span className="material-symbols-outlined text-sm">lock</span>
-                Access restricted to @edlight.org accounts only
-              </p>
+                {/* Mini stat boxes */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px", marginTop: "16px" }}>
+                  {[
+                    { val: "89%", label: "Avg score", color: blue },
+                    { val: "47", label: "Completed", color: "#10b981" },
+                    { val: "3", label: "Overdue", color: "#f59e0b" },
+                  ].map(s => (
+                    <div key={s.label} style={{ textAlign: "center", padding: "10px 4px", borderRadius: "10px", background: dark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)", border: `1px solid ${border}` }}>
+                      <div style={{ fontSize: "18px", fontWeight: 800, color: s.color, letterSpacing: "-0.02em" }}>{s.val}</div>
+                      <div style={{ fontSize: "10px", color: textMuted, marginTop: "1px" }}>{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Mini module list */}
+                <div style={{ marginTop: "14px", padding: "12px", borderRadius: "10px", background: dark ? "rgba(14,165,233,0.06)" : "rgba(14,165,233,0.05)", border: `1px solid ${dark ? "rgba(14,165,233,0.12)" : "rgba(14,165,233,0.1)"}` }}>
+                  <div style={{ fontSize: "11px", fontWeight: 600, color: blue, marginBottom: "8px" }}>Next due</div>
+                  {[
+                    { name: "Password Security", due: "Apr 30", icon: "lock" },
+                    { name: "Social Engineering", due: "May 15", icon: "psychology" },
+                  ].map(m => (
+                    <div key={m.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: "13px", color: textMuted }}>{m.icon}</span>
+                        <span style={{ fontSize: "11px", color: text }}>{m.name}</span>
+                      </div>
+                      <span style={{ fontSize: "10px", color: textMuted }}>{m.due}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
-        </section>
+        </div>
 
-      </main>
+        {/* Stats bar */}
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, borderTop: `1px solid ${border}`, background: dark ? "rgba(0,0,0,0.35)" : "rgba(255,255,255,0.7)", backdropFilter: "blur(12px)" }}>
+          <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", maxWidth: "900px", margin: "0 auto" }}>
+            {stats.map((s, i) => (
+              <div key={i} style={{ flex: "1 1 140px", textAlign: "center", padding: "18px 16px", borderRight: i < stats.length - 1 ? `1px solid ${border}` : "none" }}>
+                <div style={{ fontSize: "24px", fontWeight: 800, color: blue, letterSpacing: "-0.02em" }}>{s.val}</div>
+                <div style={{ fontSize: "12px", color: textMuted, marginTop: "2px", fontWeight: 500 }}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════
+          HOW IT WORKS
+      ══════════════════════════════════════════════════════════════ */}
+      <section id="how-it-works" style={{ padding: "100px clamp(20px, 6vw, 80px)", background: surface, borderTop: `1px solid ${border}` }}>
+        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "64px" }}>
+            <p style={{ fontSize: "12px", fontWeight: 700, color: blue, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "14px" }}>How It Works</p>
+            <h2 style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 800, color: text, letterSpacing: "-0.025em", margin: "0 0 16px" }}>Up and running in minutes</h2>
+            <p style={{ fontSize: "17px", color: textMuted, maxWidth: "460px", margin: "0 auto", lineHeight: 1.65 }}>Three simple steps to a fully compliant, trained workforce.</p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "28px" }}>
+            {steps.map((s, i) => (
+              <div key={i} className="step-card" style={{ padding: "36px 32px", borderRadius: "16px", background: dark ? "rgba(255,255,255,0.03)" : "#ffffff", border: `1px solid ${border}`, boxShadow: dark ? "none" : "0 1px 4px rgba(0,0,0,0.06)" }}>
+                <div className="step-num" style={{ fontSize: "48px", fontWeight: 900, letterSpacing: "-0.04em", marginBottom: "20px" }}>{s.num}</div>
+                <h3 style={{ fontSize: "18px", fontWeight: 700, color: text, marginBottom: "10px", letterSpacing: "-0.02em" }}>{s.title}</h3>
+                <p style={{ fontSize: "15px", color: textMuted, lineHeight: 1.65, margin: 0 }}>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════
+          MODULES
+      ══════════════════════════════════════════════════════════════ */}
+      <section id="modules" style={{ padding: "100px clamp(20px, 6vw, 80px)", background: bg, borderTop: `1px solid ${border}` }}>
+        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "64px" }}>
+            <p style={{ fontSize: "12px", fontWeight: 700, color: blue, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "14px" }}>Training Modules</p>
+            <h2 style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 800, color: text, letterSpacing: "-0.025em", margin: "0 0 16px" }}>Everything your team needs</h2>
+            <p style={{ fontSize: "17px", color: textMuted, maxWidth: "460px", margin: "0 auto", lineHeight: 1.65 }}>Purpose-built security modules covering today's top threats. Short, interactive, and memorable.</p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "22px" }}>
+            {features.map((f, i) => (
+              <div
+                key={i}
+                className="feature-card"
+                onMouseEnter={() => setHoverCard(i)}
+                onMouseLeave={() => setHoverCard(null)}
+                style={{
+                  padding: "32px 28px",
+                  borderRadius: "16px",
+                  background: dark ? (hoverCard === i ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.025)") : (hoverCard === i ? "#f8fafc" : "#ffffff"),
+                  border: `1px solid ${hoverCard === i ? f.color + "55" : border}`,
+                  boxShadow: hoverCard === i ? `0 0 0 1px ${f.color}22, 0 10px 36px ${f.glow}` : dark ? "none" : "0 1px 3px rgba(0,0,0,0.05)",
+                }}
+              >
+                <div style={{ width: "44px", height: "44px", borderRadius: "12px", background: f.color + "15", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px" }}>
+                  <span className="material-symbols-outlined" style={{ color: f.color, fontSize: "22px" }}>{f.icon}</span>
+                </div>
+                <h3 style={{ fontSize: "16.5px", fontWeight: 700, color: text, marginBottom: "10px", letterSpacing: "-0.015em" }}>{f.title}</h3>
+                <p style={{ fontSize: "14px", color: textMuted, lineHeight: 1.68, margin: 0 }}>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════
+          FOR ADMINS
+      ══════════════════════════════════════════════════════════════ */}
+      <section id="admins" style={{ padding: "100px clamp(20px, 6vw, 80px)", background: surfaceAlt, borderTop: `1px solid ${border}` }}>
+        <div style={{ maxWidth: "1100px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "64px", alignItems: "center" }}>
+
+          <div>
+            <p style={{ fontSize: "12px", fontWeight: 700, color: blue, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "16px" }}>For Admins</p>
+            <h2 style={{ fontSize: "clamp(26px, 3.5vw, 40px)", fontWeight: 800, color: text, letterSpacing: "-0.025em", margin: "0 0 18px" }}>Full visibility.<br />Zero overhead.</h2>
+            <p style={{ fontSize: "16px", color: textMuted, lineHeight: 1.72, marginBottom: "30px" }}>
+              Assign training to any employee, department, or the whole company. Automated email reminders keep everyone on track. Export compliance reports for auditors in one click.
+            </p>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "11px" }}>
+              {["Real-time completion dashboard","Automated reminder emails","Per-employee progress and scores","One-click PDF compliance reports"].map(item => (
+                <li key={item} style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "15px", color: textMuted }}>
+                  <span className="material-symbols-outlined" style={{ color: blue, fontSize: "18px", flexShrink: 0 }}>check_circle</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Assignment & Team Management panel */}
+          <div style={{ borderRadius: "20px", padding: "26px", background: dark ? "rgba(255,255,255,0.03)" : "#ffffff", border: `1px solid ${border}`, boxShadow: dark ? "none" : "0 6px 32px rgba(14,165,233,0.08), 0 2px 8px rgba(0,0,0,0.04)" }}>
+
+            {/* Panel header */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", paddingBottom: "16px", borderBottom: `1px solid ${border}` }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <div style={{ width: "36px", height: "36px", borderRadius: "10px", background: `linear-gradient(135deg, ${blueDeep}, ${blue})`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span className="material-symbols-outlined" style={{ color: "#fff", fontSize: "20px" }}>admin_panel_settings</span>
+                </div>
+                <div>
+                  <div style={{ fontSize: "13.5px", fontWeight: 700, color: text }}>Assign Training</div>
+                  <div style={{ fontSize: "11px", color: textMuted }}>New campaign</div>
+                </div>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px", padding: "4px 10px", borderRadius: "99px", background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)" }}>
+                <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#10b981", animation: "pulse-dot 2s ease-in-out infinite" }} />
+                <span style={{ fontSize: "10.5px", fontWeight: 600, color: "#10b981" }}>Live</span>
+              </div>
+            </div>
+
+            {/* Module being assigned */}
+            <div style={{ padding: "12px 14px", borderRadius: "11px", background: dark ? "rgba(14,165,233,0.07)" : "rgba(14,165,233,0.06)", border: `1px solid ${dark ? "rgba(14,165,233,0.18)" : "rgba(14,165,233,0.14)"}`, marginBottom: "16px", display: "flex", alignItems: "center", gap: "12px" }}>
+              <span className="material-symbols-outlined" style={{ color: blue, fontSize: "20px" }}>shield_lock</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: "13px", fontWeight: 700, color: text }}>Phishing Awareness 2026</div>
+                <div style={{ fontSize: "11px", color: textMuted }}>8 min · Quiz included</div>
+              </div>
+              <span className="material-symbols-outlined" style={{ color: textMuted, fontSize: "16px" }}>chevron_right</span>
+            </div>
+
+            {/* Recipients list */}
+            <div style={{ fontSize: "11px", fontWeight: 600, color: textMuted, marginBottom: "8px", letterSpacing: "0.04em", textTransform: "uppercase" }}>Recipients</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "16px" }}>
+              {[
+                { name: "Engineering Team", count: "24 people", icon: "groups", clr: blue, status: "Selected" },
+                { name: "Sales Department", count: "16 people", icon: "groups", clr: "#6366f1", status: "Selected" },
+                { name: "All managers", count: "9 people", icon: "manage_accounts", clr: "#7c3aed", status: "Selected" },
+              ].map((r, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 11px", borderRadius: "9px", background: dark ? "rgba(255,255,255,0.025)" : "rgba(0,0,0,0.025)" }}>
+                  <div style={{ width: "26px", height: "26px", borderRadius: "8px", background: r.clr + "20", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <span className="material-symbols-outlined" style={{ color: r.clr, fontSize: "15px" }}>{r.icon}</span>
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: "12.5px", fontWeight: 600, color: text, lineHeight: 1.2 }}>{r.name}</div>
+                    <div style={{ fontSize: "10.5px", color: textMuted }}>{r.count}</div>
+                  </div>
+                  <span className="material-symbols-outlined" style={{ color: blue, fontSize: "16px" }}>check_circle</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Schedule + reminder toggles */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "16px" }}>
+              <div style={{ padding: "10px 11px", borderRadius: "9px", background: dark ? "rgba(255,255,255,0.025)" : "rgba(0,0,0,0.025)" }}>
+                <div style={{ fontSize: "10px", color: textMuted, marginBottom: "3px", fontWeight: 500 }}>Due date</div>
+                <div style={{ fontSize: "12px", fontWeight: 700, color: text, display: "flex", alignItems: "center", gap: "5px" }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: "13px", color: blue }}>event</span>
+                  May 15, 2026
+                </div>
+              </div>
+              <div style={{ padding: "10px 11px", borderRadius: "9px", background: dark ? "rgba(255,255,255,0.025)" : "rgba(0,0,0,0.025)" }}>
+                <div style={{ fontSize: "10px", color: textMuted, marginBottom: "3px", fontWeight: 500 }}>Auto-reminders</div>
+                <div style={{ fontSize: "12px", fontWeight: 700, color: text, display: "flex", alignItems: "center", gap: "5px" }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: "13px", color: "#10b981" }}>notifications_active</span>
+                  Every 3 days
+                </div>
+              </div>
+            </div>
+
+            {/* Send button */}
+            <button style={{ width: "100%", padding: "11px", borderRadius: "10px", backgroundImage: `linear-gradient(135deg, ${blueDeep}, ${blue})`, backgroundSize: "200% auto", color: "#fff", fontWeight: 700, fontSize: "13px", border: "none", cursor: "pointer", letterSpacing: "-0.01em", animation: "shimmer 4s linear infinite", boxShadow: "0 4px 16px rgba(14,165,233,0.25)" }}>
+              Send to 49 employees
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════
+          PRIVACY & OWNERSHIP
+      ══════════════════════════════════════════════════════════════ */}
+      <section id="privacy" style={{ padding: "100px clamp(20px, 6vw, 80px)", background: surface, borderTop: `1px solid ${border}` }}>
+        <div style={{ maxWidth: "880px", margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "44px" }}>
+            <p style={{ fontSize: "12px", fontWeight: 700, color: blue, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "14px" }}>Privacy &amp; Ownership</p>
+            <h2 style={{ fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 800, color: text, letterSpacing: "-0.025em", margin: "0 0 18px" }}>
+              Built and operated by the<br />
+              <span style={{ backgroundImage: `linear-gradient(135deg, ${blueDeep}, ${blueLight})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>EdLight Initiative.</span>
+            </h2>
+            <p style={{ fontSize: "16px", color: textMuted, lineHeight: 1.72, maxWidth: "640px", margin: "0 auto" }}>
+              This platform is wholly owned and operated by the EdLight initiative. We do not sell, share, or monetize your organization's training data. Your team's progress, scores, and personal information stay private to your organization.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px" }}>
+            {[
+              { icon: "verified_user", title: "Owned by EdLight", desc: "Independently operated. No third-party owners or investors influencing data policy." },
+              { icon: "lock", title: "Data stays yours", desc: "Your organization controls its data. Export or delete anytime, no questions asked." },
+              { icon: "block", title: "No ads, no selling", desc: "We never sell or share user data with advertisers, brokers, or third parties." },
+              { icon: "encrypted", title: "Encrypted end-to-end", desc: "All data encrypted in transit and at rest. SOC 2 aligned, GDPR ready." },
+            ].map((p, i) => (
+              <div key={i} style={{ padding: "22px 20px", borderRadius: "14px", background: dark ? "rgba(255,255,255,0.025)" : "#ffffff", border: `1px solid ${border}`, boxShadow: dark ? "none" : "0 1px 3px rgba(0,0,0,0.04)" }}>
+                <div style={{ width: "38px", height: "38px", borderRadius: "10px", background: dark ? "rgba(14,165,233,0.1)" : "rgba(14,165,233,0.08)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "14px" }}>
+                  <span className="material-symbols-outlined" style={{ color: blue, fontSize: "20px" }}>{p.icon}</span>
+                </div>
+                <h3 style={{ fontSize: "15px", fontWeight: 700, color: text, margin: "0 0 6px", letterSpacing: "-0.01em" }}>{p.title}</h3>
+                <p style={{ fontSize: "13px", color: textMuted, lineHeight: 1.6, margin: 0 }}>{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════
+          CTA
+      ══════════════════════════════════════════════════════════════ */}
+      <section style={{ padding: "100px clamp(20px, 6vw, 80px)", background: bg, borderTop: `1px solid ${border}` }}>
+        <div style={{ maxWidth: "600px", margin: "0 auto", textAlign: "center" }}>
+          <h2 style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 800, color: text, letterSpacing: "-0.025em", margin: "0 0 18px" }}>
+            Ready to protect your organization?
+          </h2>
+          <p style={{ fontSize: "17px", color: textMuted, lineHeight: 1.65, marginBottom: "38px" }}>
+            Set up your workspace in minutes. No credit card required.
+          </p>
+          <Link href="/login" className="primary-btn" style={{ display: "inline-block", color: "#fff", fontWeight: 700, fontSize: "16px", padding: "15px 40px", borderRadius: "12px", textDecoration: "none", letterSpacing: "-0.01em", boxShadow: "0 4px 28px rgba(14,165,233,0.28)" }}>
+            Start Training
+          </Link>
+        </div>
+      </section>
 
       <PublicFooter />
     </div>

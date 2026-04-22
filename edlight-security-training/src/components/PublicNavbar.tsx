@@ -1,152 +1,183 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useTheme } from "@/context/ThemeContext";
+import { Sun, Moon, ArrowLeft } from "lucide-react";
 
 const navLinks = [
-  { label: "Why It Matters", href: "#why-it-matters" },
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "Platform Features", href: "#platform-features" },
+  { label: "Home", href: "/" },
+  { label: "Platform", href: "/#platform" },
+  { label: "How It Works", href: "/#how-it-works" },
+  { label: "Modules", href: "/#modules" },
+  { label: "For Admins", href: "/#admins" },
 ];
 
 export default function PublicNavbar() {
-  const [open, setOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
-  const isDark = theme === "dark";
+  const router = useRouter();
+  const dark = theme === "dark";
+
+  const bg = dark ? "rgba(0,0,0,0.8)" : "rgba(255,255,255,0.85)";
+  const border = dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)";
+  const shimmerTop = dark ? "rgba(56,189,248,0.4)" : "rgba(14,165,233,0.35)";
+  const logoColor = dark ? "#f5f5f5" : "#0f172a";
+  const linkColor = dark ? "rgba(255,255,255,0.45)" : "rgba(15,23,42,0.5)";
+  const linkHover = dark ? "#ffffff" : "#0f172a";
 
   return (
     <header
-      className="fixed top-0 w-full z-50 backdrop-blur-md"
       style={{
-        backgroundColor: "rgba(20,26,22,0.85)",
-        borderBottom: "1px solid rgba(74,124,89,0.15)",
+        position: "fixed",
+        top: 0,
+        width: "100%",
+        zIndex: 50,
+        backgroundColor: bg,
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        borderBottom: `1px solid ${border}`,
+        transition: "background-color 0.3s, border-color 0.3s",
       }}
     >
-      <div className="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
-        {/* Logo */}
-        <Link
-          href="/"
-          className="flex items-center gap-2.5 text-xl font-bold"
-          style={{ fontFamily: "var(--font-literata), Literata, serif", color: "#f0ece4" }}
-        >
-          <div
-            className="h-8 w-8 rounded-lg flex items-center justify-center"
-            style={{ backgroundColor: "#4a7c59" }}
+      {/* Shimmer accent line */}
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1px", background: `linear-gradient(to right, transparent, ${shimmerTop}, transparent)` }} />
+
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", padding: "0 clamp(24px, 5vw, 56px)", height: "64px", maxWidth: "1280px", margin: "0 auto" }}>
+
+        {/* Left cluster: back button + logo */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", flexShrink: 0 }}>
+          <button
+            onClick={() => router.back()}
+            aria-label="Go back"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "36px",
+              height: "36px",
+              borderRadius: "9px",
+              border: `1px solid ${border}`,
+              backgroundColor: "transparent",
+              cursor: "pointer",
+              color: linkColor,
+              transition: "all 0.2s",
+            }}
+            onMouseOver={(e) => { e.currentTarget.style.backgroundColor = dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.05)"; e.currentTarget.style.color = logoColor; }}
+            onMouseOut={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = linkColor; }}
           >
-            <span className="material-symbols-outlined text-white text-base" style={{ fontVariationSettings: "'FILL' 1" }}>
-              shield
+            <ArrowLeft size={15} />
+          </button>
+
+          {/* Logo */}
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
+          <Image
+            src={dark ? "/edlight-logo-white.png" : "/edlight-logo-navy.png"}
+            alt="EdLight logo"
+            width={28}
+            height={28}
+          />
+          <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.05 }}>
+            <span style={{ fontSize: "13px", fontWeight: 700, color: logoColor, letterSpacing: "-0.01em", transition: "color 0.3s" }}>
+              EdLight
+            </span>
+            <span style={{
+              fontSize: "13px",
+              fontWeight: 700,
+              letterSpacing: "-0.01em",
+              backgroundImage: "linear-gradient(135deg, #0369a1 0%, #38bdf8 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}>
+              Security Training
             </span>
           </div>
-          EdLight
         </Link>
+        </div>
 
-        {/* Desktop nav */}
-        <nav className="hidden md:flex items-center space-x-8">
+        {/* Center nav links */}
+        <nav style={{ display: "flex", alignItems: "center", gap: "2px" }}>
           {navLinks.map((link) => (
             <Link
               key={link.label}
               href={link.href}
-              className="text-sm font-medium transition-colors"
-              style={{ color: "rgba(240,236,228,0.55)" }}
-              onMouseOver={(e) => (e.currentTarget.style.color = "#f0ece4")}
-              onMouseOut={(e) => (e.currentTarget.style.color = "rgba(240,236,228,0.55)")}
+              style={{
+                fontSize: "13.5px",
+                fontWeight: 500,
+                color: linkColor,
+                padding: "6px 14px",
+                borderRadius: "8px",
+                textDecoration: "none",
+                transition: "color 0.18s, background-color 0.18s",
+                whiteSpace: "nowrap",
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.color = linkHover;
+                e.currentTarget.style.backgroundColor = dark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.color = linkColor;
+                e.currentTarget.style.backgroundColor = "transparent";
+              }}
             >
               {link.label}
             </Link>
           ))}
         </nav>
 
-        {/* CTAs */}
-        <div className="flex items-center space-x-3">
+        {/* Right actions */}
+        <div style={{ display: "flex", alignItems: "center", gap: "6px", flexShrink: 0 }}>
+          {/* Dark/light toggle */}
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "36px",
+              height: "36px",
+              borderRadius: "9px",
+              border: `1px solid ${border}`,
+              backgroundColor: "transparent",
+              cursor: "pointer",
+              color: linkColor,
+              transition: "all 0.2s",
+            }}
+            onMouseOver={(e) => { e.currentTarget.style.backgroundColor = dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.05)"; e.currentTarget.style.color = logoColor; }}
+            onMouseOut={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = linkColor; }}
+          >
+            {dark ? <Sun size={15} /> : <Moon size={15} />}
+          </button>
+
           <Link
             href="/login"
-            className="hidden md:block text-sm font-medium px-4 py-2 rounded-lg transition-all"
-            style={{ color: "rgba(240,236,228,0.55)" }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.color = "#f0ece4";
-              e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.06)";
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.color = "rgba(240,236,228,0.55)";
-              e.currentTarget.style.backgroundColor = "transparent";
-            }}
+            style={{ fontSize: "13.5px", fontWeight: 500, color: linkColor, padding: "8px 14px", borderRadius: "8px", textDecoration: "none", transition: "color 0.18s" }}
           >
             Sign In
           </Link>
+
           <Link
             href="/login"
-            className="text-white px-5 py-2.5 rounded-lg font-bold text-sm transition-all hover:opacity-90"
             style={{
-              backgroundColor: "#4a7c59",
-              boxShadow: "0 0 16px rgba(74,124,89,0.3)",
+              fontSize: "13.5px",
+              fontWeight: 700,
+              color: "#ffffff",
+              backgroundImage: "linear-gradient(135deg, #0369a1 0%, #0ea5e9 50%, #0369a1 100%)",
+              backgroundSize: "200% auto",
+              padding: "9px 20px",
+              borderRadius: "9px",
+              textDecoration: "none",
+              letterSpacing: "-0.01em",
+              boxShadow: "0 0 0 1px rgba(14,165,233,0.3), 0 4px 16px rgba(14,165,233,0.18)",
+              animation: "shimmer 4s linear infinite",
             }}
           >
-            Get Started
+            Start Training
           </Link>
-          {/* Dark / Light toggle */}
-          <button
-            onClick={toggleTheme}
-            className="hidden md:flex items-center justify-center h-9 w-9 rounded-lg transition-all"
-            style={{
-              backgroundColor: isDark ? "rgba(74,124,89,0.15)" : "rgba(255,255,255,0.08)",
-              border: isDark ? "1px solid rgba(74,124,89,0.3)" : "1px solid rgba(74,124,89,0.2)",
-              color: isDark ? "#6eba8a" : "rgba(240,236,228,0.6)",
-            }}
-            aria-label="Toggle dark/light mode"
-          >
-            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </button>
-          <button
-            className="md:hidden p-2 rounded-lg transition-colors"
-            style={{ color: "rgba(240,236,228,0.6)" }}
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle navigation"
-          >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
         </div>
       </div>
-
-      {/* Mobile menu */}
-      {open && (
-        <div
-          className="md:hidden px-6 pb-5"
-          style={{
-            backgroundColor: "#141a16",
-            borderTop: "1px solid rgba(74,124,89,0.15)",
-          }}
-        >
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className="block py-3 text-sm font-medium transition-colors"
-              style={{ color: "rgba(240,236,228,0.55)", borderBottom: "1px solid rgba(74,124,89,0.08)" }}
-              onClick={() => setOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
-          <Link
-            href="/login"
-            className="block mt-4 text-sm font-bold"
-            style={{ color: "#6eba8a" }}
-            onClick={() => setOpen(false)}
-          >
-            Sign In →
-          </Link>
-          <button
-            onClick={toggleTheme}
-            className="mt-4 flex items-center gap-2 text-sm font-medium"
-            style={{ color: "rgba(240,236,228,0.55)" }}
-          >
-            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            {isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          </button>
-        </div>
-      )}
     </header>
   );
 }

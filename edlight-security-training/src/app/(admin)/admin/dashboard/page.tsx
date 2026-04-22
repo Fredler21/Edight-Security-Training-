@@ -10,6 +10,10 @@ import {
   TrendingUp,
   ChevronRight,
   BookOpen,
+  Bell,
+  PieChart,
+  FileText,
+  ClipboardList,
 } from "lucide-react";
 import { getAllUsers, getAllProgressRecords, AdminUser } from "@/lib/firestore";
 import { modules } from "@/data/modules";
@@ -104,6 +108,31 @@ export default function AdminDashboardPage() {
           Organization-wide training progress and activity.
         </p>
       </div>
+
+      {/* Overdue alert banner */}
+      {!loading && notStartedUsers > 0 && (
+        <div className="flex items-center justify-between gap-4 mb-6 bg-red-50 border border-red-200 rounded-2xl px-5 py-4">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-red-100 flex items-center justify-center flex-shrink-0">
+              <Bell className="h-4.5 w-4.5 text-red-600" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-red-900">
+                {notStartedUsers} employee{notStartedUsers !== 1 ? "s" : ""} {notStartedUsers === 1 ? "has" : "have"} not started training
+              </p>
+              <p className="text-xs text-red-600 mt-0.5">
+                Configure reminders to notify them automatically.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/admin/reminders"
+            className="flex items-center gap-1.5 text-xs font-semibold text-red-700 hover:text-red-800 flex-shrink-0 transition-colors"
+          >
+            Manage reminders <ChevronRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+      )}
 
       {/* Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -240,6 +269,63 @@ export default function AdminDashboardPage() {
         >
           Employee List <ChevronRight className="h-4 w-4" />
         </Link>
+      </div>
+
+      {/* V4 Quick Access */}
+      <div className="mt-6">
+        <h2 className="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-3 px-1">
+          Enterprise Tools
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[
+            {
+              icon: PieChart,
+              label: "Analytics",
+              desc: "Department-level insights and module performance.",
+              href: "/admin/analytics",
+              color: "text-purple-600",
+              bg: "bg-purple-50",
+            },
+            {
+              icon: FileText,
+              label: "Reports",
+              desc: "Export training data as CSV for compliance auditing.",
+              href: "/admin/reports",
+              color: "text-blue-600",
+              bg: "bg-blue-50",
+            },
+            {
+              icon: Bell,
+              label: "Reminders",
+              desc: "Configure overdue alerts and notification settings.",
+              href: "/admin/reminders",
+              color: "text-amber-600",
+              bg: "bg-amber-50",
+            },
+            {
+              icon: ClipboardList,
+              label: "Assignments",
+              desc: "Set department-based training rules and due dates.",
+              href: "/admin/assignments",
+              color: "text-teal-600",
+              bg: "bg-teal-50",
+            },
+          ].map(({ icon: Icon, label, desc, href, color, bg }) => (
+            <Link
+              key={href}
+              href={href}
+              className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:border-teal-300 hover:shadow-md transition-all group"
+            >
+              <div className={`h-9 w-9 rounded-xl ${bg} flex items-center justify-center mb-3`}>
+                <Icon className={`h-4.5 w-4.5 ${color}`} />
+              </div>
+              <p className="text-sm font-semibold text-slate-900 group-hover:text-teal-700 transition-colors mb-1">
+                {label}
+              </p>
+              <p className="text-xs text-slate-400">{desc}</p>
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

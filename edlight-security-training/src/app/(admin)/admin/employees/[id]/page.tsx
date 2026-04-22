@@ -12,10 +12,20 @@ import {
   Building2,
   Calendar,
   Clock,
+  Activity,
+  BookOpen,
+  LogIn,
+  HelpCircle,
 } from "lucide-react";
-import { getUserById, getCompletionsForUser, getUserProgress, AdminUser } from "@/lib/firestore";
+import {
+  getUserById,
+  getCompletionsForUser,
+  getUserProgress,
+  getAuditLogs,
+  AdminUser,
+} from "@/lib/firestore";
 import { modules } from "@/data/modules";
-import type { ModuleCompletion, EmployeeTrainingProgress } from "@/types";
+import type { ModuleCompletion, EmployeeTrainingProgress, AuditLog } from "@/types";
 import ProgressBar from "@/components/ProgressBar";
 import StatusBadge from "@/components/StatusBadge";
 
@@ -24,6 +34,7 @@ export default function EmployeeDetailPage() {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [completions, setCompletions] = useState<Record<string, ModuleCompletion>>({});
   const [progress, setProgress] = useState<EmployeeTrainingProgress | null>(null);
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -32,10 +43,12 @@ export default function EmployeeDetailPage() {
       getUserById(id),
       getCompletionsForUser(id),
       getUserProgress(id),
-    ]).then(([u, c, p]) => {
+      getAuditLogs(id),
+    ]).then(([u, c, p, logs]) => {
       setUser(u);
       setCompletions(c);
       setProgress(p);
+      setAuditLogs(logs);
       setLoading(false);
     });
   }, [id]);
@@ -200,6 +213,93 @@ export default function EmployeeDetailPage() {
             );
           })}
         </div>
+      </div>
+
+      {/* Audit History */}
+      <div className="mt-6 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-100 flex items-center gap-2">
+          <Activity className="h-4 w-4 text-slate-500" />
+          <h2 className="text-[15px] font-semibold text-slate-900">Activity Log</h2>
+        </div>
+        {auditLogs.length === 0 ? (
+          <div className="px-6 py-8 text-center text-sm text-slate-400">
+            No activity recorded yet.
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-100">
+            {auditLogs.map((log) => {
+              const Icon =
+                log.action === "module_completed"
+                  ? CheckCircle2
+                  : log.action === "module_started"
+                  ? BookOpen
+                  : log.action === "quiz_attempted"
+                  ? HelpCircle
+                  : log.action === "login"
+                  ? LogIn
+                  : Activity;
+              const iconColor =
+                log.action === "module_completed"
+                  ? "text-teal-600 bg-teal-100"
+                  : log.action === "module_started"
+                  ? "text-blue-600 bg-blue-100"
+                  : log.action === "quiz_attempted"
+                  ? "text-purple-600 bg-purple-100"
+                  : log.action === "login"
+                  ? "text-slate-500 bg-slate-100"
+                  : "text-amber-600 bg-amber-100";
+              const actionLabel =
+                log.action === "module_completed"
+                  ? "Completed"
+                  : log.action === "module_started"
+                  ? "Started"
+                  : log.action === "quiz_attempted"
+                  ? "Quiz attempt"
+                  : log.action === "login"
+                  ? "Logged in"
+                  : log.action === "reminder_sent"
+                  ? "Reminder sent"
+                  : log.action;
+
+              return (
+                <div key={log.id} className="flex items-start gap-3 px-6 py-3.5">
+                  <div
+                    className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 ${iconColor}`}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-slate-800">
+                      <span className="font-semibold">{actionLabel}</span>
+                      {log.moduleTitle && (
+                        <span className="text-slate-500"> · {log.moduleTitle}</span>
+                      )}
+                    </p>
+                    {log.score != null && (
+                      <p
+                        className={`text-xs font-semibold mt-0.5 ${
+                          log.score >= 75 ? "text-teal-600" : "text-amber-600"
+                        }`}
+                      >
+                        Score: {log.score}%
+                      </p>
+                    )}
+                    {log.details && (
+                      <p className="text-xs text-slate-400 mt-0.5">{log.details}</p>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-400 flex-shrink-0 whitespace-nowrap">
+                    {new Date(log.timestamp).toLocaleDateString()}{" "}
+                    {new Date(log.timestamp).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -11,6 +11,10 @@ import {
   ChevronRight,
   LogOut,
   ShieldCheck,
+  Bell,
+  FileText,
+  PieChart,
+  ClipboardList,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
@@ -28,6 +32,10 @@ const employeeNavItems = [
 const adminNavItems = [
   { label: "Admin Dashboard", href: "/admin/dashboard", icon: ShieldCheck },
   { label: "Employees", href: "/admin/employees", icon: LayoutDashboard },
+  { label: "Analytics", href: "/admin/analytics", icon: PieChart },
+  { label: "Reports", href: "/admin/reports", icon: FileText },
+  { label: "Reminders", href: "/admin/reminders", icon: Bell },
+  { label: "Assignments", href: "/admin/assignments", icon: ClipboardList },
 ];
 
 export default function DashboardSidebar() {

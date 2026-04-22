@@ -102,7 +102,7 @@ export default function ModuleView({ module }: ModuleViewProps) {
     if (!user || quizScore === null) return;
     setSaving(true);
     try {
-      await saveModuleCompletion(user.uid, module.id, quizScore, modules.length);
+      await saveModuleCompletion(user.uid, module.id, quizScore, modules.length, module.title);
       setCompleted(true);
     } finally {
       setSaving(false);

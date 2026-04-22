@@ -3,14 +3,24 @@ import {
   getDoc,
   getDocs,
   setDoc,
+  deleteDoc,
+  addDoc,
   collection,
   query,
   where,
   orderBy,
+  limit,
   serverTimestamp,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import type { ModuleCompletion, EmployeeTrainingProgress } from "@/types";
+import type {
+  ModuleCompletion,
+  EmployeeTrainingProgress,
+  AuditLog,
+  AuditAction,
+  ReminderConfig,
+  TrainingAssignment,
+} from "@/types";
 
 // ─── Module Completions ───────────────────────────────────────────────────────
 
@@ -34,7 +44,8 @@ export async function saveModuleCompletion(
   userId: string,
   moduleId: string,
   score: number,
-  totalModules: number
+  totalModules: number,
+  moduleTitle?: string
 ): Promise<void> {
   const completionRef = doc(db, "moduleCompletions", `${userId}_${moduleId}`);
 
@@ -56,6 +67,16 @@ export async function saveModuleCompletion(
     },
     { merge: true }
   );
+
+  // Write audit log
+  await addDoc(collection(db, "auditLogs"), {
+    userId,
+    action: "module_completed",
+    moduleId,
+    moduleTitle: moduleTitle ?? moduleId,
+    score,
+    timestamp: serverTimestamp(),
+  });
 
   // Recalculate overall progress
   await recalculateUserProgress(userId, totalModules);
@@ -167,4 +188,109 @@ export async function getCompletionsForUser(
 export async function getAllProgressRecords(): Promise<import("@/types").EmployeeTrainingProgress[]> {
   const snap = await getDocs(collection(db, "userProgress"));
   return snap.docs.map((d) => d.data() as import("@/types").EmployeeTrainingProgress);
+}
+
+// ─── V4 — Audit Logs ─────────────────────────────────────────────────────────
+
+export async function getAuditLogs(userId: string): Promise<AuditLog[]> {
+  const q = query(
+    collection(db, "auditLogs"),
+    where("userId", "==", userId),
+    orderBy("timestamp", "desc"),
+    limit(20)
+  );
+  const snap = await getDocs(q);
+  return snap.docs.map((d) => {
+    const data = d.data();
+    return {
+      id: d.id,
+      userId: data.userId ?? userId,
+      action: (data.action ?? "login") as AuditAction,
+      moduleId: data.moduleId,
+      moduleTitle: data.moduleTitle,
+      score: data.score,
+      timestamp: data.timestamp?.toDate?.()?.toISOString() ?? new Date().toISOString(),
+      details: data.details,
+    } as AuditLog;
+  });
+}
+
+export async function writeAuditLog(
+  entry: Omit<AuditLog, "id" | "timestamp">
+): Promise<void> {
+  await addDoc(collection(db, "auditLogs"), {
+    ...entry,
+    timestamp: serverTimestamp(),
+  });
+}
+
+// ─── V4 — Reminder Config ─────────────────────────────────────────────────────
+
+export async function getReminderConfig(): Promise<ReminderConfig | null> {
+  const snap = await getDoc(doc(db, "config", "reminders"));
+  if (!snap.exists()) return null;
+  const data = snap.data();
+  return {
+    id: "reminders",
+    enabled: data.enabled ?? false,
+    frequencyDays: data.frequencyDays ?? 7,
+    dueDate: data.dueDate ?? null,
+    message: data.message ?? "",
+    updatedAt: data.updatedAt?.toDate?.()?.toISOString() ?? new Date().toISOString(),
+  };
+}
+
+export async function saveReminderConfig(
+  config: Omit<ReminderConfig, "id" | "updatedAt">
+): Promise<void> {
+  await setDoc(doc(db, "config", "reminders"), {
+    ...config,
+    updatedAt: serverTimestamp(),
+  });
+}
+
+// ─── V4 — Training Assignments ───────────────────────────────────────────────
+
+export async function getTrainingAssignments(): Promise<TrainingAssignment[]> {
+  const snap = await getDocs(collection(db, "trainingAssignments"));
+  return snap.docs.map((d) => {
+    const data = d.data();
+    return {
+      id: d.id,
+      department: data.department ?? "",
+      requiredModuleIds: data.requiredModuleIds ?? [],
+      dueDate: data.dueDate ?? null,
+      createdAt: data.createdAt?.toDate?.()?.toISOString() ?? new Date().toISOString(),
+      updatedAt: data.updatedAt?.toDate?.()?.toISOString() ?? new Date().toISOString(),
+    } as TrainingAssignment;
+  });
+}
+
+export async function saveTrainingAssignment(
+  assignment: Omit<TrainingAssignment, "createdAt" | "updatedAt"> & { isNew?: boolean }
+): Promise<void> {
+  const { isNew, ...rest } = assignment;
+  const ref = isNew
+    ? doc(collection(db, "trainingAssignments"))
+    : doc(db, "trainingAssignments", assignment.id);
+  await setDoc(
+    ref,
+    {
+      ...rest,
+      updatedAt: serverTimestamp(),
+      ...(isNew ? { createdAt: serverTimestamp() } : {}),
+    },
+    { merge: true }
+  );
+}
+
+export async function deleteTrainingAssignment(id: string): Promise<void> {
+  await deleteDoc(doc(db, "trainingAssignments", id));
+}
+
+// ─── V4 — All Module Completions (for analytics) ─────────────────────────────
+
+export async function getAllModuleCompletions(): Promise<ModuleCompletion[]> {
+  const snap = await getDocs(collection(db, "moduleCompletions"));
+  return snap.docs.map((d) => d.data() as ModuleCompletion);
 }

@@ -75,3 +75,57 @@ export interface EmployeeTrainingProgress {
   lastActivityAt?: string;
   updatedAt: string;
 }
+
+// ─── V4 — Audit Logs ─────────────────────────────────────────────────────────
+
+export type AuditAction =
+  | "module_started"
+  | "module_completed"
+  | "quiz_attempted"
+  | "login"
+  | "reminder_sent";
+
+export interface AuditLog {
+  id: string;
+  userId: string;
+  action: AuditAction;
+  moduleId?: string;
+  moduleTitle?: string;
+  score?: number;
+  timestamp: string;
+  details?: string;
+}
+
+// ─── V4 — Reminder Config ─────────────────────────────────────────────────────
+
+export interface ReminderConfig {
+  id: string;
+  enabled: boolean;
+  frequencyDays: number;
+  dueDate: string | null;
+  message: string;
+  updatedAt: string;
+}
+
+// ─── V4 — Training Assignments ───────────────────────────────────────────────
+
+export interface TrainingAssignment {
+  id: string;
+  department: string;
+  requiredModuleIds: string[];
+  dueDate: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ─── V4 — Department Stats ───────────────────────────────────────────────────
+
+export interface DepartmentStat {
+  department: string;
+  totalUsers: number;
+  completedUsers: number;
+  inProgressUsers: number;
+  notStartedUsers: number;
+  completionRate: number;
+  avgProgress: number;
+}

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useTheme } from "@/context/ThemeContext";
 import { Sun, Moon, ArrowLeft } from "lucide-react";
 
@@ -17,6 +17,8 @@ const navLinks = [
 export default function PublicNavbar() {
   const { theme, toggleTheme } = useTheme();
   const router = useRouter();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const dark = theme === "dark";
 
   const bg = dark ? "rgba(0,0,0,0.8)" : "rgba(255,255,255,0.85)";
@@ -47,27 +49,29 @@ export default function PublicNavbar() {
 
         {/* Left cluster: back button + logo */}
         <div style={{ display: "flex", alignItems: "center", gap: "12px", flexShrink: 0 }}>
-          <button
-            onClick={() => router.back()}
-            aria-label="Go back"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "36px",
-              height: "36px",
-              borderRadius: "9px",
-              border: `1px solid ${border}`,
-              backgroundColor: "transparent",
-              cursor: "pointer",
-              color: linkColor,
-              transition: "all 0.2s",
-            }}
-            onMouseOver={(e) => { e.currentTarget.style.backgroundColor = dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.05)"; e.currentTarget.style.color = logoColor; }}
-            onMouseOut={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = linkColor; }}
-          >
-            <ArrowLeft size={15} />
-          </button>
+          {!isHome && (
+            <button
+              onClick={() => router.back()}
+              aria-label="Go back"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "36px",
+                height: "36px",
+                borderRadius: "9px",
+                border: `1px solid ${border}`,
+                backgroundColor: "transparent",
+                cursor: "pointer",
+                color: linkColor,
+                transition: "all 0.2s",
+              }}
+              onMouseOver={(e) => { e.currentTarget.style.backgroundColor = dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.05)"; e.currentTarget.style.color = logoColor; }}
+              onMouseOut={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = linkColor; }}
+            >
+              <ArrowLeft size={15} />
+            </button>
+          )}
 
           {/* Logo */}
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>

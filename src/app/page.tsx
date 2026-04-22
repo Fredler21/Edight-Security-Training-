@@ -33,9 +33,9 @@ export default function LandingPage() {
   ];
 
   const steps = [
-    { num: "01", title: "Assign Modules", desc: "Select training modules and assign them to individuals, departments, or your entire organization in seconds." },
-    { num: "02", title: "Employees Learn", desc: "Staff complete short, engaging lessons with interactive quizzes at their own pace, on any device." },
-    { num: "03", title: "Track & Report", desc: "Monitor progress in real time. Export compliance reports with one click for audits or leadership review." },
+    { num: "I", title: "Assign Modules", desc: "Select training modules and assign them to individuals, departments, or your entire organization in seconds.", icon: "playlist_add_check", color: "#0ea5e9" },
+    { num: "II", title: "Employees Learn", desc: "Staff complete short, engaging lessons with interactive quizzes at their own pace, on any device.", icon: "school", color: "#6366f1" },
+    { num: "III", title: "Track & Report", desc: "Monitor progress in real time. Export compliance reports with one click for audits or leadership review.", icon: "insights", color: "#7c3aed" },
   ];
 
   const stats = [
@@ -46,10 +46,10 @@ export default function LandingPage() {
   ];
 
   const dashRows = [
-    { name: "Engineering", pct: 88, color: blue },
-    { name: "Marketing", pct: 100, color: "#10b981", done: true },
-    { name: "Finance", pct: 73, color: "#6366f1" },
-    { name: "Legal", pct: 94, color: "#0891b2" },
+    { name: "Phishing Defense", pct: 88, color: blue },
+    { name: "Password Hygiene", pct: 100, color: "#10b981", done: true },
+    { name: "Data Protection", pct: 73, color: "#6366f1" },
+    { name: "Incident Response", pct: 94, color: "#0891b2" },
   ];
 
   return (
@@ -111,9 +111,16 @@ export default function LandingPage() {
         .ghost-btn:hover { background: rgba(14,165,233,0.07) !important; border-color: rgba(14,165,233,0.3) !important; transform: translateY(-1px); }
         .feature-card { transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease; cursor: default; }
         .feature-card:hover { transform: translateY(-5px); }
-        .step-card { transition: transform 0.22s ease, box-shadow 0.22s ease; }
-        .step-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(14,165,233,0.13) !important; }
+        .step-card { position: relative; transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease; overflow: hidden; }
+        .step-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background-image: linear-gradient(90deg, ${blueDeep}, ${blue}, ${blueLight}); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
+        .step-card:hover { transform: translateY(-6px); box-shadow: 0 18px 48px rgba(14,165,233,0.18) !important; border-color: rgba(14,165,233,0.35) !important; }
+        .step-card:hover::before { transform: scaleX(1); }
+        .step-card:hover .step-icon-badge { transform: rotate(-6deg) scale(1.06); }
+        .step-icon-badge { transition: transform 0.3s ease; }
         .step-num { background: linear-gradient(135deg, ${blueDeep}, ${blue}); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        @keyframes step-pulse { 0%,100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.15); opacity: 0.9; } }
+        @keyframes step-fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .step-card-anim { animation: step-fade-up 0.7s ease-out both; }
         @keyframes gradient-shift {
           0%, 100% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
@@ -310,11 +317,77 @@ export default function LandingPage() {
             <p style={{ fontSize: "17px", color: textMuted, maxWidth: "460px", margin: "0 auto", lineHeight: 1.65 }}>Three simple steps to a fully compliant, trained workforce.</p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "28px" }}>
+          <div style={{ position: "relative", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "28px" }}>
+            {/* Connecting line */}
+            <div aria-hidden style={{ position: "absolute", top: "60px", left: "15%", right: "15%", height: "2px", backgroundImage: `linear-gradient(90deg, transparent, ${blue}33, ${blue}55, ${blue}33, transparent)`, zIndex: 0, pointerEvents: "none" }} />
+
             {steps.map((s, i) => (
-              <div key={i} className="step-card" style={{ padding: "36px 32px", borderRadius: "16px", background: dark ? "rgba(255,255,255,0.03)" : "#ffffff", border: `1px solid ${border}`, boxShadow: dark ? "none" : "0 1px 4px rgba(0,0,0,0.06)" }}>
-                <div className="step-num" style={{ fontSize: "48px", fontWeight: 900, letterSpacing: "-0.04em", marginBottom: "20px" }}>{s.num}</div>
-                <h3 style={{ fontSize: "18px", fontWeight: 700, color: text, marginBottom: "10px", letterSpacing: "-0.02em" }}>{s.title}</h3>
+              <div
+                key={i}
+                className="step-card step-card-anim"
+                style={{
+                  position: "relative",
+                  zIndex: 1,
+                  padding: "40px 32px 34px",
+                  borderRadius: "20px",
+                  background: dark ? "rgba(255,255,255,0.03)" : "#ffffff",
+                  border: `1px solid ${border}`,
+                  boxShadow: dark ? "none" : "0 1px 4px rgba(0,0,0,0.06)",
+                  animationDelay: `${i * 0.12}s`,
+                }}
+              >
+                {/* Icon badge with pulse ring */}
+                <div style={{ position: "relative", display: "inline-flex", marginBottom: "22px" }}>
+                  <span aria-hidden style={{ position: "absolute", inset: "-6px", borderRadius: "50%", border: `2px solid ${s.color}33`, animation: `step-pulse 2.6s ease-in-out ${i * 0.4}s infinite` }} />
+                  <div
+                    className="step-icon-badge"
+                    style={{
+                      position: "relative",
+                      width: "56px",
+                      height: "56px",
+                      borderRadius: "16px",
+                      backgroundImage: `linear-gradient(135deg, ${s.color}, ${s.color}cc)`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: `0 8px 24px ${s.color}55`,
+                    }}
+                  >
+                    <span className="material-symbols-outlined" style={{ color: "#fff", fontSize: "28px" }}>{s.icon}</span>
+                  </div>
+                  {/* Step number chip */}
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "-10px",
+                      right: "-14px",
+                      minWidth: "28px",
+                      height: "28px",
+                      padding: "0 8px",
+                      borderRadius: "999px",
+                      background: dark ? "#0f1724" : "#ffffff",
+                      border: `1.5px solid ${s.color}`,
+                      color: s.color,
+                      fontSize: "12px",
+                      fontWeight: 800,
+                      letterSpacing: "0.05em",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontFamily: "var(--font-geist-mono), monospace",
+                    }}
+                  >
+                    {s.num}
+                  </span>
+                </div>
+
+                {/* Step label */}
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
+                  <span style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: s.color }}>Step {s.num}</span>
+                  <span style={{ flex: 1, height: "1px", background: dark ? "rgba(255,255,255,0.08)" : "rgba(15,23,42,0.08)" }} />
+                </div>
+
+                <h3 style={{ fontSize: "19px", fontWeight: 700, color: text, marginBottom: "10px", letterSpacing: "-0.02em" }}>{s.title}</h3>
                 <p style={{ fontSize: "15px", color: textMuted, lineHeight: 1.65, margin: 0 }}>{s.desc}</p>
               </div>
             ))}
@@ -415,9 +488,9 @@ export default function LandingPage() {
             <div style={{ fontSize: "11px", fontWeight: 600, color: textMuted, marginBottom: "8px", letterSpacing: "0.04em", textTransform: "uppercase" }}>Recipients</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "16px" }}>
               {[
-                { name: "Engineering Team", count: "24 people", icon: "groups", clr: blue, status: "Selected" },
-                { name: "Sales Department", count: "16 people", icon: "groups", clr: "#6366f1", status: "Selected" },
-                { name: "All managers", count: "9 people", icon: "manage_accounts", clr: "#7c3aed", status: "Selected" },
+                { name: "All employees", count: "8 people", icon: "groups", clr: blue, status: "Selected" },
+                { name: "New hires", count: "1 person", icon: "person_add", clr: "#6366f1", status: "Selected" },
+                { name: "Team leads", count: "4 people", icon: "manage_accounts", clr: "#7c3aed", status: "Selected" },
               ].map((r, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 11px", borderRadius: "9px", background: dark ? "rgba(255,255,255,0.025)" : "rgba(0,0,0,0.025)" }}>
                   <div style={{ width: "26px", height: "26px", borderRadius: "8px", background: r.clr + "20", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
@@ -452,7 +525,7 @@ export default function LandingPage() {
 
             {/* Send button */}
             <button style={{ width: "100%", padding: "11px", borderRadius: "10px", backgroundImage: `linear-gradient(135deg, ${blueDeep}, ${blue})`, backgroundSize: "200% auto", color: "#fff", fontWeight: 700, fontSize: "13px", border: "none", cursor: "pointer", letterSpacing: "-0.01em", animation: "shimmer 4s linear infinite", boxShadow: "0 4px 16px rgba(14,165,233,0.25)" }}>
-              Send to 49 employees
+              Send to 13 employees
             </button>
           </div>
         </div>

@@ -42,6 +42,7 @@ function AssignmentModal({
   );
   const [dueDate, setDueDate] = useState(initial?.dueDate ?? "");
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const effectiveDept = department === "__custom__" ? customDept : department;
 
@@ -53,17 +54,35 @@ function AssignmentModal({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!effectiveDept.trim()) return;
+    if (!effectiveDept.trim()) {
+      setError("Pick a department, or add a custom one.");
+      return;
+    }
+    if (requiredModuleIds.length === 0) {
+      setError("Select at least one required module.");
+      return;
+    }
+    setError(null);
     setSaving(true);
-    await saveTrainingAssignment({
-      id: initial?.id ?? crypto.randomUUID(),
-      department: effectiveDept.trim(),
-      requiredModuleIds,
-      dueDate: dueDate || null,
-      isNew: !initial,
-    });
-    setSaving(false);
-    onSaved();
+    try {
+      await saveTrainingAssignment({
+        id: initial?.id ?? crypto.randomUUID(),
+        department: effectiveDept.trim(),
+        requiredModuleIds,
+        dueDate: dueDate || null,
+        isNew: !initial,
+      });
+      onSaved();
+    } catch (err) {
+      console.error("Failed to save assignment", err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Could not save the assignment. Please try again."
+      );
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -162,13 +181,19 @@ function AssignmentModal({
             </button>
             <button
               type="submit"
-              disabled={saving || !effectiveDept.trim() || requiredModuleIds.length === 0}
-              className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              disabled={saving}
+              className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-sky-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <Save className="h-4 w-4" />
               {saving ? "Saving…" : "Save Assignment"}
             </button>
           </div>
+
+          {error && (
+            <div className="rounded-lg bg-rose-50 border border-rose-200 px-3 py-2 text-xs text-rose-700">
+              {error}
+            </div>
+          )}
         </form>
       </div>
     </div>

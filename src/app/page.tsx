@@ -550,7 +550,7 @@ export default function LandingPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px" }}>
             {[
               { icon: "verified_user", title: "Owned by EdLight", desc: "Independently operated. No third-party owners or investors influencing data policy." },
-              { icon: "lock", title: "Data stays yours", desc: "Your organization controls its data. Export or delete anytime, no questions asked." },
+              { icon: "lock", title: "Your data stays private", desc: "Only EdLight employees can see your training information. Nothing is shared outside the company." },
               { icon: "block", title: "No ads, no selling", desc: "We never sell or share user data with advertisers, brokers, or third parties." },
               { icon: "encrypted", title: "Encrypted end-to-end", desc: "All data encrypted in transit and at rest. SOC 2 aligned, GDPR ready." },
             ].map((p, i) => (
@@ -575,7 +575,7 @@ export default function LandingPage() {
             Ready to protect your organization?
           </h2>
           <p style={{ fontSize: "17px", color: textMuted, lineHeight: 1.65, marginBottom: "38px" }}>
-            Set up your workspace in minutes. No credit card required.
+            Sign in with your EdLight account and start your training in seconds.
           </p>
           <Link href="/login" className="primary-btn" style={{ display: "inline-block", color: "#fff", fontWeight: 700, fontSize: "16px", padding: "15px 40px", borderRadius: "12px", textDecoration: "none", letterSpacing: "-0.01em", boxShadow: "0 4px 28px rgba(14,165,233,0.28)" }}>
             Start Training

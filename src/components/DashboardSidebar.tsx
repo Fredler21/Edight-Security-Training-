@@ -204,8 +204,8 @@ export default function DashboardSidebar() {
           <span aria-hidden style={{ position: "absolute", inset: "-4px", borderRadius: "50%", border: `1px solid ${blue}55`, animation: "side-pulse 3s ease-in-out infinite", pointerEvents: "none" }} />
         </div>
         <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.05 }}>
-          <span style={{ fontSize: "13px", fontWeight: 700, color: text }}>EdLight Security</span>
-          <span style={{ fontSize: "12px", fontWeight: 700, backgroundImage: `linear-gradient(135deg, ${blueDeep}, ${blueLight})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Training</span>
+          <span style={{ fontSize: "13px", fontWeight: 700, color: text }}>EdLight</span>
+          <span style={{ fontSize: "12px", fontWeight: 700, backgroundImage: `linear-gradient(135deg, ${blueDeep}, ${blueLight})`, WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Security Training</span>
         </div>
       </div>
 

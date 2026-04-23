@@ -11,6 +11,7 @@ import {
   orderBy,
   limit,
   serverTimestamp,
+  increment,
 } from "firebase/firestore";
 import { db } from "./firebase";
 import type {
@@ -49,10 +50,7 @@ export async function saveModuleCompletion(
 ): Promise<void> {
   const completionRef = doc(db, "moduleCompletions", `${userId}_${moduleId}`);
 
-  // Fetch existing to increment attempts
-  const existing = await getDoc(completionRef);
-  const prevAttempts = existing.exists() ? (existing.data().attempts ?? 0) : 0;
-
+  // Atomic increment so we don't need to read the doc first (avoids rules read-on-create issue).
   await setDoc(
     completionRef,
     {
@@ -62,24 +60,32 @@ export async function saveModuleCompletion(
       completed: true,
       completedAt: serverTimestamp(),
       score,
-      attempts: prevAttempts + 1,
+      attempts: increment(1),
       lastViewedAt: serverTimestamp(),
     },
     { merge: true }
   );
 
-  // Write audit log
-  await addDoc(collection(db, "auditLogs"), {
-    userId,
-    action: "module_completed",
-    moduleId,
-    moduleTitle: moduleTitle ?? moduleId,
-    score,
-    timestamp: serverTimestamp(),
-  });
+  // Audit log is best-effort — never block completion if rules disallow it.
+  try {
+    await addDoc(collection(db, "auditLogs"), {
+      userId,
+      action: "module_completed",
+      moduleId,
+      moduleTitle: moduleTitle ?? moduleId,
+      score,
+      timestamp: serverTimestamp(),
+    });
+  } catch (err) {
+    console.warn("Audit log write failed (non-fatal)", err);
+  }
 
-  // Recalculate overall progress
-  await recalculateUserProgress(userId, totalModules);
+  // Recalculate overall progress (also best-effort to avoid breaking the flow).
+  try {
+    await recalculateUserProgress(userId, totalModules);
+  } catch (err) {
+    console.warn("Progress recalculation failed (non-fatal)", err);
+  }
 }
 
 // ─── User Overall Progress ────────────────────────────────────────────────────

@@ -86,6 +86,7 @@ export default function ModuleView({ module }: ModuleViewProps) {
   const [quizScore, setQuizScore] = useState<number | null>(null);
   const [completed, setCompleted] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   // Find the previous module (by order)
   const previousModule = modules.find((m) => m.order === module.order - 1);
@@ -101,9 +102,17 @@ export default function ModuleView({ module }: ModuleViewProps) {
   async function handleMarkComplete() {
     if (!user || quizScore === null) return;
     setSaving(true);
+    setSaveError(null);
     try {
       await saveModuleCompletion(user.uid, module.id, quizScore, modules.length, module.title);
       setCompleted(true);
+    } catch (err) {
+      console.error("Failed to save module completion", err);
+      setSaveError(
+        err instanceof Error
+          ? err.message
+          : "Could not save your completion. Please try again."
+      );
     } finally {
       setSaving(false);
     }
@@ -331,7 +340,12 @@ export default function ModuleView({ module }: ModuleViewProps) {
           </div>
 
           {quizScore !== null && !completed && (
-            <div className="mt-6 flex justify-end">
+            <div className="mt-6 flex flex-col items-end gap-3">
+              {saveError && (
+                <div className="w-full bg-rose-50 border border-rose-200 text-rose-700 text-sm rounded-xl px-4 py-3">
+                  {saveError}
+                </div>
+              )}
               <button
                 onClick={handleMarkComplete}
                 disabled={saving}

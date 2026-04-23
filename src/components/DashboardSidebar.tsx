@@ -21,6 +21,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useAuth } from "@/context/AuthContext";
 import { signOut } from "@/lib/auth";
 import { db } from "@/lib/firebase";
+import { getTrainingAssignments, getModuleCompletions } from "@/lib/firestore";
 
 const employeeNavItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -51,18 +52,45 @@ export default function DashboardSidebar() {
   const router = useRouter();
   const { user, role } = useAuth();
   const [profile, setProfile] = useState<{ jobTitle: string; department: string } | null>(null);
+  const [todoCount, setTodoCount] = useState(0);
 
   useEffect(() => {
     if (!user) return;
-    getDoc(doc(db, "users", user.uid)).then((snap) => {
+    let cancelled = false;
+    (async () => {
+      const snap = await getDoc(doc(db, "users", user.uid));
+      if (cancelled) return;
+      const dept = snap.exists() ? (snap.data().department ?? "") : "";
       if (snap.exists()) {
         const d = snap.data();
-        setProfile({
-          jobTitle: d.jobTitle ?? "",
-          department: d.department ?? "",
-        });
+        setProfile({ jobTitle: d.jobTitle ?? "", department: d.department ?? "" });
       }
-    });
+      try {
+        const [assignments, completions] = await Promise.all([
+          getTrainingAssignments(),
+          getModuleCompletions(user.uid),
+        ]);
+        if (cancelled) return;
+        const deptKey = dept.trim().toLowerCase();
+        const required = new Set<string>();
+        for (const a of assignments) {
+          const aDept = (a.department ?? "").trim().toLowerCase();
+          if (aDept === deptKey || aDept === "all" || aDept === "*" || aDept === "everyone") {
+            a.requiredModuleIds.forEach((id) => required.add(id));
+          }
+        }
+        let count = 0;
+        required.forEach((id) => {
+          if (!completions[id]?.completed) count += 1;
+        });
+        setTodoCount(count);
+      } catch (err) {
+        console.error("Failed to load to-do count", err);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
 
   const initials = user?.displayName
@@ -84,7 +112,13 @@ export default function DashboardSidebar() {
   const text = "#f1f5f9";
   const textMuted = "rgba(255,255,255,0.45)";
 
-  const renderNavItem = (label: string, href: string, Icon: IconType, active: boolean) => (
+  const renderNavItem = (
+    label: string,
+    href: string,
+    Icon: IconType,
+    active: boolean,
+    badge?: number
+  ) => (
     <Link
       key={href}
       href={href}
@@ -118,6 +152,28 @@ export default function DashboardSidebar() {
     >
       <Icon size={17} style={{ color: active ? blue : "currentColor", flexShrink: 0 }} />
       <span style={{ flex: 1 }}>{label}</span>
+      {badge && badge > 0 ? (
+        <span
+          aria-label={`${badge} pending`}
+          style={{
+            minWidth: "20px",
+            height: "20px",
+            padding: "0 6px",
+            borderRadius: "999px",
+            backgroundImage: `linear-gradient(135deg, ${blueDeep}, ${blue})`,
+            color: "#fff",
+            fontSize: "11px",
+            fontWeight: 700,
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: `0 0 0 1px ${blue}55, 0 4px 10px ${blue}44`,
+            letterSpacing: 0,
+          }}
+        >
+          {badge > 99 ? "99+" : badge}
+        </span>
+      ) : null}
       {active && <ChevronRight size={14} style={{ color: blue }} />}
     </Link>
   );
@@ -158,7 +214,8 @@ export default function DashboardSidebar() {
         <p style={{ fontSize: "10px", fontWeight: 700, color: "rgba(255,255,255,0.3)", letterSpacing: "0.14em", textTransform: "uppercase", padding: "4px 12px 8px", margin: 0 }}>Workspace</p>
         {employeeNavItems.map(({ label, href, icon }) => {
           const active = pathname === href || pathname.startsWith(href + "/");
-          return renderNavItem(label, href, icon as IconType, active);
+          const badge = href === "/dashboard" ? todoCount : undefined;
+          return renderNavItem(label, href, icon as IconType, active, badge);
         })}
 
         {(role === "admin" || role === "super_admin") && (

@@ -8,6 +8,8 @@ import { modules } from "@/data/modules";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/hooks/useProgress";
 import { db } from "@/lib/firebase";
+import { getTrainingAssignments } from "@/lib/firestore";
+import type { TrainingAssignment } from "@/types";
 
 // Dashboard palette — refined blue (matches landing for a unified professional look)
 const blue = "#0ea5e9";
@@ -25,6 +27,7 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const { getModuleProgress, loading } = useProgress(user?.uid);
   const [profile, setProfile] = useState<{ jobTitle: string; department: string } | null>(null);
+  const [assignments, setAssignments] = useState<TrainingAssignment[]>([]);
 
   useEffect(() => {
     if (!user) return;
@@ -34,6 +37,9 @@ export default function DashboardPage() {
         setProfile({ jobTitle: d.jobTitle ?? "", department: d.department ?? "" });
       }
     });
+    getTrainingAssignments()
+      .then(setAssignments)
+      .catch((err) => console.error("Failed to load assignments", err));
   }, [user]);
 
   const completedCount = modules.filter(
@@ -50,6 +56,34 @@ export default function DashboardPage() {
   );
 
   const firstName = user?.displayName?.split(" ")[0] ?? "there";
+
+  // ─── To-Do list from admin assignments ──────────────────────────────────────
+  const dept = (profile?.department ?? "").trim().toLowerCase();
+  const matchedAssignments = assignments.filter((a) => {
+    const aDept = (a.department ?? "").trim().toLowerCase();
+    return aDept === dept || aDept === "all" || aDept === "*" || aDept === "everyone";
+  });
+  const requiredModuleIdSet = new Set<string>();
+  let earliestDueDate: string | null = null;
+  for (const a of matchedAssignments) {
+    a.requiredModuleIds.forEach((id) => requiredModuleIdSet.add(id));
+    if (a.dueDate) {
+      if (!earliestDueDate || a.dueDate < earliestDueDate) earliestDueDate = a.dueDate;
+    }
+  }
+  const todoModules = modules
+    .filter((m) => requiredModuleIdSet.has(m.id))
+    .map((m) => ({ module: m, progress: getModuleProgress(m.id) }))
+    .filter((x) => x.progress.status !== "completed");
+
+  const dueDateLabel = earliestDueDate
+    ? new Date(earliestDueDate).toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : null;
+  const isOverdue = earliestDueDate ? new Date(earliestDueDate) < new Date() : false;
 
   const stats = [
     { label: "Overall Progress", value: loading ? "\u2014" : `${overallPercent}%`, sub: `${completedCount} of ${modules.length} modules`, icon: "trending_up", color: blueDeep },
@@ -169,6 +203,167 @@ export default function DashboardPage() {
           })}
         </div>
       </div>
+
+      {/* Assigned To-Do List (from admin assignments) */}
+      {todoModules.length > 0 && !loading && (
+        <div
+          className="dash-fade"
+          style={{
+            position: "relative",
+            padding: "26px 28px",
+            borderRadius: "18px",
+            background: cardBg,
+            border: `1px solid ${border}`,
+            marginBottom: "32px",
+            overflow: "hidden",
+            animationDelay: "0.4s",
+          }}
+        >
+          <div
+            aria-hidden
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "3px",
+              backgroundImage: `linear-gradient(90deg, ${isOverdue ? "#dc2626" : blueDeep}, ${isOverdue ? "#f97316" : blue})`,
+            }}
+          />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: "12px",
+              marginBottom: "18px",
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "7px",
+                  padding: "4px 10px",
+                  borderRadius: "999px",
+                  background: isOverdue ? "rgba(220,38,38,0.1)" : "rgba(3,105,161,0.1)",
+                  border: `1px solid ${isOverdue ? "#dc262644" : `${blueDeep}33`}`,
+                  marginBottom: "10px",
+                }}
+              >
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: "13px", color: isOverdue ? "#dc2626" : blueDeep }}
+                >
+                  {isOverdue ? "warning" : "assignment"}
+                </span>
+                <span
+                  style={{
+                    fontSize: "10.5px",
+                    fontWeight: 700,
+                    color: isOverdue ? "#dc2626" : blueDeep,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Assigned to you
+                </span>
+              </div>
+              <h2 style={{ fontSize: "16px", fontWeight: 700, color: text, margin: "0 0 4px", letterSpacing: "-0.01em" }}>
+                Your To-Do List
+              </h2>
+              <p style={{ fontSize: "13px", color: textMuted, margin: 0 }}>
+                {todoModules.length} module{todoModules.length !== 1 ? "s" : ""} required
+                {dueDateLabel && (
+                  <>
+                    {" · "}
+                    <span style={{ color: isOverdue ? "#dc2626" : textMuted, fontWeight: isOverdue ? 600 : 400 }}>
+                      {isOverdue ? "Overdue " : "Due "}
+                      {dueDateLabel}
+                    </span>
+                  </>
+                )}
+              </p>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {todoModules.map(({ module: m, progress: p }) => {
+              const isInProgress = p.status === "in_progress";
+              return (
+                <Link
+                  key={m.id}
+                  href={`/modules/${m.slug}`}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "14px",
+                    padding: "14px 16px",
+                    borderRadius: "12px",
+                    background: "#f8fafc",
+                    border: `1px solid ${border}`,
+                    textDecoration: "none",
+                    color: "inherit",
+                    transition: "transform 0.15s ease, border-color 0.15s ease, background 0.15s ease",
+                  }}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.borderColor = `${blue}66`;
+                    e.currentTarget.style.background = "#fff";
+                    e.currentTarget.style.transform = "translateX(2px)";
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.borderColor = border;
+                    e.currentTarget.style.background = "#f8fafc";
+                    e.currentTarget.style.transform = "translateX(0)";
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "36px",
+                      height: "36px",
+                      borderRadius: "10px",
+                      backgroundImage: `linear-gradient(135deg, ${m.color}, ${m.color}aa)`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                      boxShadow: `0 4px 10px ${m.color}33`,
+                    }}
+                  >
+                    <span className="material-symbols-outlined" style={{ color: "#fff", fontSize: "18px" }}>
+                      {m.icon}
+                    </span>
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: "14px", fontWeight: 600, color: text, margin: "0 0 2px", letterSpacing: "-0.01em" }}>
+                      {m.title}
+                    </p>
+                    <p style={{ fontSize: "12px", color: textMuted, margin: 0 }}>
+                      {isInProgress ? "In progress" : "Not started"} · About {m.estimatedMinutes} min
+                    </p>
+                  </div>
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      fontSize: "12px",
+                      fontWeight: 600,
+                      color: blueDeep,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {isInProgress ? "Resume" : "Start"}
+                    <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Continue Learning */}
       {nextModule && !loading && (

@@ -26,10 +26,10 @@ export default function LandingPage() {
   const blueDeep = "#0369a1";
 
   const features = [
-    { icon: "shield_lock", title: "Phishing Defense", desc: "Realistic simulated attacks train employees to spot and report phishing emails before damage occurs.", color: blue, glow: "rgba(14,165,233,0.12)" },
-    { icon: "lock_person", title: "Access Control", desc: "Best practices for password hygiene, MFA, and principle of least privilege across your organization.", color: "#6366f1", glow: "rgba(99,102,241,0.12)" },
-    { icon: "devices", title: "Device & Data Safety", desc: "Training on secure remote work, BYOD policies, and safe handling of sensitive company information.", color: "#0891b2", glow: "rgba(8,145,178,0.12)" },
-    { icon: "manage_accounts", title: "Admin Dashboard", desc: "Real-time completion tracking, automated reminders, and compliance reports for your entire team.", color: "#7c3aed", glow: "rgba(124,58,237,0.12)" },
+    { icon: "shield_lock", title: "Phishing Defense", desc: "Realistic simulated attacks train employees to spot and report phishing emails before damage occurs.", color: blue, glow: "rgba(14,165,233,0.12)", lessons: 6, minutes: 18, level: "Essential" },
+    { icon: "lock_person", title: "Access Control", desc: "Best practices for password hygiene, MFA, and principle of least privilege across your organization.", color: "#6366f1", glow: "rgba(99,102,241,0.12)", lessons: 5, minutes: 15, level: "Core" },
+    { icon: "devices", title: "Device & Data Safety", desc: "Training on secure remote work, BYOD policies, and safe handling of sensitive company information.", color: "#0891b2", glow: "rgba(8,145,178,0.12)", lessons: 7, minutes: 22, level: "Core" },
+    { icon: "manage_accounts", title: "Admin Dashboard", desc: "Real-time completion tracking, automated reminders, and compliance reports for your entire team.", color: "#7c3aed", glow: "rgba(124,58,237,0.12)", lessons: 4, minutes: 12, level: "Admins" },
   ];
 
   const steps = [
@@ -109,8 +109,12 @@ export default function LandingPage() {
         .primary-btn:hover { filter: brightness(1.12); transform: translateY(-1px); }
         .ghost-btn { transition: background 0.18s, border-color 0.18s, transform 0.18s; }
         .ghost-btn:hover { background: rgba(14,165,233,0.07) !important; border-color: rgba(14,165,233,0.3) !important; transform: translateY(-1px); }
-        .feature-card { transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease; cursor: default; }
-        .feature-card:hover { transform: translateY(-5px); }
+        .feature-card { transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease; cursor: default; }
+        .feature-card:hover { transform: translateY(-6px); }
+        @keyframes mod-orb { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-30px,20px) scale(1.08); } }
+        @keyframes mod-orb-2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(30px,-25px) scale(1.05); } }
+        @keyframes mod-fade-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+        .mod-card-anim { animation: mod-fade-up 0.7s ease-out both; }
         .step-card { position: relative; transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease; overflow: hidden; }
         .step-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background-image: linear-gradient(90deg, ${blueDeep}, ${blue}, ${blueLight}); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
         .step-card:hover { transform: translateY(-6px); box-shadow: 0 18px 48px rgba(14,165,233,0.18) !important; border-color: rgba(14,165,233,0.35) !important; }
@@ -398,34 +402,99 @@ export default function LandingPage() {
       {/* ══════════════════════════════════════════════════════════════
           MODULES
       ══════════════════════════════════════════════════════════════ */}
-      <section id="modules" style={{ padding: "100px clamp(20px, 6vw, 80px)", background: bg, borderTop: `1px solid ${border}` }}>
-        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: "64px" }}>
-            <p style={{ fontSize: "12px", fontWeight: 700, color: blue, letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "14px" }}>Training Modules</p>
+      <section id="modules" style={{ position: "relative", padding: "100px clamp(20px, 6vw, 80px)", background: bg, borderTop: `1px solid ${border}`, overflow: "hidden" }}>
+        {/* Decorative orbs */}
+        <div aria-hidden style={{ position: "absolute", top: "10%", right: "-120px", width: "360px", height: "360px", borderRadius: "50%", background: `radial-gradient(circle, ${blueLight}1f, transparent 70%)`, filter: "blur(30px)", pointerEvents: "none", animation: "mod-orb 14s ease-in-out infinite" }} />
+        <div aria-hidden style={{ position: "absolute", bottom: "10%", left: "-140px", width: "320px", height: "320px", borderRadius: "50%", background: `radial-gradient(circle, #7c3aed1a, transparent 70%)`, filter: "blur(30px)", pointerEvents: "none", animation: "mod-orb-2 16s ease-in-out infinite" }} />
+
+        <div style={{ maxWidth: "1100px", margin: "0 auto", position: "relative", zIndex: 1 }}>
+          <div style={{ textAlign: "center", marginBottom: "56px" }}>
+            {/* Eyebrow pill */}
+            <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "6px 14px", borderRadius: "999px", background: dark ? "rgba(14,165,233,0.12)" : "rgba(14,165,233,0.08)", border: `1px solid ${dark ? "rgba(14,165,233,0.28)" : "rgba(14,165,233,0.22)"}`, marginBottom: "18px" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "15px", color: blue }}>library_books</span>
+              <p style={{ fontSize: "12px", fontWeight: 700, color: blue, letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>Training Modules</p>
+            </div>
             <h2 style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 800, color: text, letterSpacing: "-0.025em", margin: "0 0 16px" }}>Everything your team needs</h2>
-            <p style={{ fontSize: "17px", color: textMuted, maxWidth: "460px", margin: "0 auto", lineHeight: 1.65 }}>Purpose-built security modules covering today's top threats. Short, interactive, and memorable.</p>
+            <p style={{ fontSize: "17px", color: textMuted, maxWidth: "520px", margin: "0 auto", lineHeight: 1.65 }}>Purpose-built security modules covering today&apos;s top threats. Short, interactive, and memorable.</p>
+
+            {/* Summary stats */}
+            <div style={{ display: "inline-flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: "10px", marginTop: "24px" }}>
+              {[
+                { icon: "auto_stories", label: "22 lessons" },
+                { icon: "schedule", label: "67 min total" },
+                { icon: "devices", label: "Any device" },
+              ].map((s) => (
+                <span key={s.label} style={{ display: "inline-flex", alignItems: "center", gap: "6px", padding: "6px 12px", borderRadius: "999px", fontSize: "12.5px", fontWeight: 600, color: text, background: dark ? "rgba(255,255,255,0.04)" : "rgba(15,23,42,0.04)", border: `1px solid ${border}` }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: "14px", color: blue }}>{s.icon}</span>
+                  {s.label}
+                </span>
+              ))}
+            </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "22px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "22px" }}>
             {features.map((f, i) => (
               <div
                 key={i}
-                className="feature-card"
+                className="feature-card mod-card-anim"
                 onMouseEnter={() => setHoverCard(i)}
                 onMouseLeave={() => setHoverCard(null)}
                 style={{
-                  padding: "32px 28px",
-                  borderRadius: "16px",
+                  position: "relative",
+                  padding: "28px 26px 24px",
+                  borderRadius: "18px",
                   background: dark ? (hoverCard === i ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.025)") : (hoverCard === i ? "#f8fafc" : "#ffffff"),
                   border: `1px solid ${hoverCard === i ? f.color + "55" : border}`,
-                  boxShadow: hoverCard === i ? `0 0 0 1px ${f.color}22, 0 10px 36px ${f.glow}` : dark ? "none" : "0 1px 3px rgba(0,0,0,0.05)",
+                  boxShadow: hoverCard === i ? `0 0 0 1px ${f.color}22, 0 18px 48px ${f.glow}` : dark ? "none" : "0 1px 3px rgba(0,0,0,0.05)",
+                  overflow: "hidden",
+                  animationDelay: `${i * 0.1}s`,
                 }}
               >
-                <div style={{ width: "44px", height: "44px", borderRadius: "12px", background: f.color + "15", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px" }}>
-                  <span className="material-symbols-outlined" style={{ color: f.color, fontSize: "22px" }}>{f.icon}</span>
+                {/* Top gradient accent */}
+                <div aria-hidden style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", backgroundImage: `linear-gradient(90deg, ${f.color}, ${f.color}99, transparent)`, opacity: hoverCard === i ? 1 : 0.5, transition: "opacity 0.3s" }} />
+
+                {/* Corner glow */}
+                <div aria-hidden style={{ position: "absolute", top: "-40px", right: "-40px", width: "120px", height: "120px", borderRadius: "50%", background: `radial-gradient(circle, ${f.color}22, transparent 70%)`, opacity: hoverCard === i ? 1 : 0, transition: "opacity 0.35s", pointerEvents: "none" }} />
+
+                {/* Header: icon + level badge */}
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "18px" }}>
+                  <div
+                    className="mod-icon"
+                    style={{
+                      width: "48px",
+                      height: "48px",
+                      borderRadius: "14px",
+                      backgroundImage: `linear-gradient(135deg, ${f.color}, ${f.color}cc)`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: `0 8px 20px ${f.color}55`,
+                      transform: hoverCard === i ? "rotate(-4deg) scale(1.06)" : "rotate(0) scale(1)",
+                      transition: "transform 0.3s ease",
+                    }}
+                  >
+                    <span className="material-symbols-outlined" style={{ color: "#fff", fontSize: "24px" }}>{f.icon}</span>
+                  </div>
+                  <span style={{ fontSize: "10.5px", fontWeight: 700, color: f.color, letterSpacing: "0.08em", textTransform: "uppercase", padding: "4px 9px", borderRadius: "999px", background: f.color + "18", border: `1px solid ${f.color}33` }}>{f.level}</span>
                 </div>
-                <h3 style={{ fontSize: "16.5px", fontWeight: 700, color: text, marginBottom: "10px", letterSpacing: "-0.015em" }}>{f.title}</h3>
-                <p style={{ fontSize: "14px", color: textMuted, lineHeight: 1.68, margin: 0 }}>{f.desc}</p>
+
+                <h3 style={{ fontSize: "17px", fontWeight: 700, color: text, marginBottom: "8px", letterSpacing: "-0.015em" }}>{f.title}</h3>
+                <p style={{ fontSize: "14px", color: textMuted, lineHeight: 1.62, margin: "0 0 18px" }}>{f.desc}</p>
+
+                {/* Footer meta */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "14px", borderTop: `1px dashed ${border}` }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "12px", color: textMuted, fontWeight: 600 }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: "14px", color: f.color }}>play_circle</span>
+                      {f.lessons} lessons
+                    </span>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: "14px", color: f.color }}>schedule</span>
+                      {f.minutes} min
+                    </span>
+                  </div>
+                  <span className="material-symbols-outlined" style={{ fontSize: "18px", color: f.color, transform: hoverCard === i ? "translateX(3px)" : "translateX(0)", transition: "transform 0.25s ease" }}>arrow_forward</span>
+                </div>
               </div>
             ))}
           </div>

@@ -123,6 +123,86 @@ Even the strongest password can be stolen. That's why MFA adds a second verifica
         explanation:
           "An IT-approved password manager is the safest, most reliable way to store and generate unique passwords for every account.",
       },
+      {
+        id: "q1-5",
+        moduleId: "module-1",
+        question: "What does multi-factor authentication (MFA) add to your login?",
+        type: "multiple_choice",
+        options: [
+          "A second password",
+          "A second proof of identity, like a code or app prompt",
+          "Faster login speed",
+          "A backup email address",
+        ],
+        correctAnswer: "A second proof of identity, like a code or app prompt",
+        explanation:
+          "MFA adds a second factor (something you have, like a phone) so a stolen password alone is not enough to break in.",
+      },
+      {
+        id: "q1-6",
+        moduleId: "module-1",
+        question: "Which of the following passwords is the strongest?",
+        type: "multiple_choice",
+        options: [
+          "Password123!",
+          "Edlight2026",
+          "Purple-Tiger-Coffee-River-42",
+          "qwerty1234",
+        ],
+        correctAnswer: "Purple-Tiger-Coffee-River-42",
+        explanation:
+          "A long passphrase made of unrelated words is much harder to crack than a short password with substitutions.",
+      },
+      {
+        id: "q1-7",
+        moduleId: "module-1",
+        question: "You can safely share your password with a trusted coworker if they need urgent access.",
+        type: "true_false",
+        options: ["True", "False"],
+        correctAnswer: "False",
+        explanation:
+          "Passwords should never be shared. If a coworker needs access, request proper permissions through IT.",
+      },
+      {
+        id: "q1-8",
+        moduleId: "module-1",
+        question: "How often should you change a strong password that has not been compromised?",
+        type: "multiple_choice",
+        options: [
+          "Every week",
+          "Only when there is a sign of compromise",
+          "Every 30 days, no exceptions",
+          "Never",
+        ],
+        correctAnswer: "Only when there is a sign of compromise",
+        explanation:
+          "Modern guidance favors strong, unique passwords plus MFA over forced rotations. Change immediately on any sign of compromise.",
+      },
+      {
+        id: "q1-9",
+        moduleId: "module-1",
+        question: "You receive an email saying your password has expired with a link to reset it. What is the safest action?",
+        type: "multiple_choice",
+        options: [
+          "Click the link and reset right away",
+          "Reply to confirm the request",
+          "Go to the login page directly through your browser and reset there",
+          "Forward the email to your team",
+        ],
+        correctAnswer: "Go to the login page directly through your browser and reset there",
+        explanation:
+          "Never reset a password from a link in an email. Always navigate to the login page yourself.",
+      },
+      {
+        id: "q1-10",
+        moduleId: "module-1",
+        question: "A password manager helps you avoid reusing the same password across sites.",
+        type: "true_false",
+        options: ["True", "False"],
+        correctAnswer: "True",
+        explanation:
+          "Password managers generate and remember a unique password for every site, so you never have to reuse one.",
+      },
     ],
     createdAt: "2026-01-01T00:00:00Z",
     updatedAt: "2026-01-01T00:00:00Z",
@@ -258,6 +338,86 @@ If you accidentally clicked a suspicious link or entered credentials:
         explanation:
           "Always forward phishing emails to security@edlight.org so the security team can investigate and protect others.",
       },
+      {
+        id: "q2-5",
+        moduleId: "module-2",
+        question: "Which of these is the strongest sign that an email is a phishing attempt?",
+        type: "multiple_choice",
+        options: [
+          "It comes from a coworker",
+          "It includes urgency, a strange request, and an unfamiliar link",
+          "It has a company logo",
+          "It is sent on a weekend",
+        ],
+        correctAnswer: "It includes urgency, a strange request, and an unfamiliar link",
+        explanation:
+          "Phishing emails almost always combine pressure, an unusual ask, and a link or attachment you weren't expecting.",
+      },
+      {
+        id: "q2-6",
+        moduleId: "module-2",
+        question: "Hovering over a link in an email shows you the real destination URL.",
+        type: "true_false",
+        options: ["True", "False"],
+        correctAnswer: "True",
+        explanation:
+          "Hovering reveals the actual URL. If the displayed text and the real link don't match, treat it as suspicious.",
+      },
+      {
+        id: "q2-7",
+        moduleId: "module-2",
+        question: "Which of these is a common red flag in a phishing email's sender address?",
+        type: "multiple_choice",
+        options: [
+          "It uses your company domain exactly",
+          "It is a slight misspelling like 'edlght.org' instead of 'edlight.org'",
+          "It comes from a Gmail address you recognize",
+          "It includes the sender's full name",
+        ],
+        correctAnswer: "It is a slight misspelling like 'edlght.org' instead of 'edlight.org'",
+        explanation:
+          "Attackers register lookalike domains that are off by one or two characters to trick busy readers.",
+      },
+      {
+        id: "q2-8",
+        moduleId: "module-2",
+        question: "You receive a text message asking you to click a link to verify a delivery. What's the safest action?",
+        type: "multiple_choice",
+        options: [
+          "Click the link to be sure",
+          "Reply STOP to opt out",
+          "Ignore the link and check the carrier's app or website directly",
+          "Forward the text to friends",
+        ],
+        correctAnswer: "Ignore the link and check the carrier's app or website directly",
+        explanation:
+          "Smishing (SMS phishing) uses fake delivery notices to trick you. Always verify through the official app or website.",
+      },
+      {
+        id: "q2-9",
+        moduleId: "module-2",
+        question: "Vishing is a phishing attempt that happens over a phone call.",
+        type: "true_false",
+        options: ["True", "False"],
+        correctAnswer: "True",
+        explanation:
+          "Vishing is voice phishing. Attackers impersonate IT, a bank, or an executive over the phone to steal information.",
+      },
+      {
+        id: "q2-10",
+        moduleId: "module-2",
+        question: "An attachment in an unexpected email is generally:",
+        type: "multiple_choice",
+        options: [
+          "Safe to open if the sender looks familiar",
+          "Safe to open if it's a PDF",
+          "Risky and should be verified before opening",
+          "Always safe in webmail",
+        ],
+        correctAnswer: "Risky and should be verified before opening",
+        explanation:
+          "Even familiar-looking attachments can carry malware. Verify with the sender through a separate channel before opening.",
+      },
     ],
     createdAt: "2026-01-01T00:00:00Z",
     updatedAt: "2026-01-01T00:00:00Z",
@@ -392,6 +552,86 @@ Browser extensions can be powerful, but they can also be malicious.
         correctAnswer: "The IT-approved software list",
         explanation:
           "Only IT-approved extensions should be installed on company devices, regardless of the source.",
+      },
+      {
+        id: "q3-5",
+        moduleId: "module-3",
+        question: "What does the padlock icon next to a website URL mean?",
+        type: "multiple_choice",
+        options: [
+          "The site is verified safe",
+          "The connection is encrypted with HTTPS",
+          "The site has no malware",
+          "The site is owned by a real company",
+        ],
+        correctAnswer: "The connection is encrypted with HTTPS",
+        explanation:
+          "The padlock only confirms that traffic is encrypted. The site itself can still be malicious, so always check the domain.",
+      },
+      {
+        id: "q3-6",
+        moduleId: "module-3",
+        question: "Public Wi-Fi at a coffee shop is safe for accessing work systems as long as you trust the venue.",
+        type: "true_false",
+        options: ["True", "False"],
+        correctAnswer: "False",
+        explanation:
+          "Public Wi-Fi is shared and easy to spoof. Always use the company VPN before accessing work systems.",
+      },
+      {
+        id: "q3-7",
+        moduleId: "module-3",
+        question: "A pop-up tells you your computer is infected and asks you to call a number. What should you do?",
+        type: "multiple_choice",
+        options: [
+          "Call the number for help",
+          "Close the browser and report it to IT",
+          "Click the pop-up to scan your computer",
+          "Restart your computer to fix it",
+        ],
+        correctAnswer: "Close the browser and report it to IT",
+        explanation:
+          "Scareware pop-ups are scams. Close the browser, don't call any number, and let IT take a look.",
+      },
+      {
+        id: "q3-8",
+        moduleId: "module-3",
+        question: "Which of these is the safest way to download a file you need for work?",
+        type: "multiple_choice",
+        options: [
+          "From the first search result",
+          "From the official vendor website or company-approved source",
+          "From a file-sharing forum",
+          "From an email attachment",
+        ],
+        correctAnswer: "From the official vendor website or company-approved source",
+        explanation:
+          "Always download software from the official vendor or an IT-approved source to avoid malware-laced installers.",
+      },
+      {
+        id: "q3-9",
+        moduleId: "module-3",
+        question: "Browser auto-fill can leak personal information to malicious websites.",
+        type: "true_false",
+        options: ["True", "False"],
+        correctAnswer: "True",
+        explanation:
+          "Hidden form fields on attacker-controlled sites can capture saved auto-fill data without your knowledge.",
+      },
+      {
+        id: "q3-10",
+        moduleId: "module-3",
+        question: "Which of these URLs is most likely safe to visit?",
+        type: "multiple_choice",
+        options: [
+          "http://edlight-secure-login.ru",
+          "https://edlight.org",
+          "http://edlight.org.login-portal.xyz",
+          "https://192.168.4.21/login",
+        ],
+        correctAnswer: "https://edlight.org",
+        explanation:
+          "The legitimate domain uses HTTPS and matches the company's exact domain. The others use lookalikes or raw IPs.",
       },
     ],
     createdAt: "2026-01-01T00:00:00Z",
@@ -533,6 +773,86 @@ Never share Confidential data outside of authorized channels. When in doubt, tre
         explanation:
           "Even a brief absence is enough for someone to access sensitive information. Always lock your screen when stepping away.",
       },
+      {
+        id: "q4-5",
+        moduleId: "module-4",
+        question: "What is the principle of least privilege?",
+        type: "multiple_choice",
+        options: [
+          "Give every employee admin rights for convenience",
+          "Give people only the access they need to do their job",
+          "Restrict all access until requested",
+          "Share access with the entire team",
+        ],
+        correctAnswer: "Give people only the access they need to do their job",
+        explanation:
+          "Least privilege limits the damage of a compromised account by giving each person only the access required for their role.",
+      },
+      {
+        id: "q4-6",
+        moduleId: "module-4",
+        question: "A coworker leaves the company. Their account access should be removed immediately.",
+        type: "true_false",
+        options: ["True", "False"],
+        correctAnswer: "True",
+        explanation:
+          "Former employees should lose access on their last day to prevent unauthorized use of credentials.",
+      },
+      {
+        id: "q4-7",
+        moduleId: "module-4",
+        question: "You need temporary access to a system you don't normally use. What's the right step?",
+        type: "multiple_choice",
+        options: [
+          "Borrow a teammate's login",
+          "Submit a formal access request to IT",
+          "Ask a manager for their password",
+          "Use a shared service account",
+        ],
+        correctAnswer: "Submit a formal access request to IT",
+        explanation:
+          "All access changes must go through IT so they can be audited and reversed if needed.",
+      },
+      {
+        id: "q4-8",
+        moduleId: "module-4",
+        question: "A visitor in the office asks to use your computer for 'just one minute'. What should you do?",
+        type: "multiple_choice",
+        options: [
+          "Let them, you'll watch over their shoulder",
+          "Politely refuse and offer to help them another way",
+          "Log them in with your credentials",
+          "Step away and let them do it quickly",
+        ],
+        correctAnswer: "Politely refuse and offer to help them another way",
+        explanation:
+          "Anyone using your account can do anything you can. Never let someone else use your active session.",
+      },
+      {
+        id: "q4-9",
+        moduleId: "module-4",
+        question: "Tailgating is when someone follows you through a secure door without using their own badge.",
+        type: "true_false",
+        options: ["True", "False"],
+        correctAnswer: "True",
+        explanation:
+          "Tailgating is a physical security threat. Politely ask the person to badge in themselves or alert reception.",
+      },
+      {
+        id: "q4-10",
+        moduleId: "module-4",
+        question: "You discover you have access to a system you don't actually need for your role. What should you do?",
+        type: "multiple_choice",
+        options: [
+          "Keep it in case you need it later",
+          "Report it to IT so the access can be removed",
+          "Use it occasionally to stay familiar",
+          "Share it with your team",
+        ],
+        correctAnswer: "Report it to IT so the access can be removed",
+        explanation:
+          "Excess access is a risk. Reporting it helps maintain least privilege and reduces your personal exposure.",
+      },
     ],
     createdAt: "2026-01-01T00:00:00Z",
     updatedAt: "2026-01-01T00:00:00Z",
@@ -673,6 +993,81 @@ The office network is managed and monitored by IT. It's the safest place to work
         correctAnswer: "True",
         explanation:
           "Disk encryption ensures that even if a device is physically stolen, the data cannot be read without the decryption key.",
+      },
+      {
+        id: "q5-5",
+        moduleId: "module-5",
+        question: "You find a USB drive in the office parking lot. What should you do?",
+        type: "multiple_choice",
+        options: [
+          "Plug it in to find the owner",
+          "Take it home to check it on your personal laptop",
+          "Hand it to IT or security without plugging it in",
+          "Leave it where you found it",
+        ],
+        correctAnswer: "Hand it to IT or security without plugging it in",
+        explanation:
+          "Dropped USB drives are a common attack technique. Never plug an unknown drive into any computer.",
+      },
+      {
+        id: "q5-6",
+        moduleId: "module-5",
+        question: "A VPN protects your traffic from being read on an untrusted network.",
+        type: "true_false",
+        options: ["True", "False"],
+        correctAnswer: "True",
+        explanation:
+          "A VPN encrypts your traffic between your device and the company network, even on hostile Wi-Fi.",
+      },
+      {
+        id: "q5-7",
+        moduleId: "module-5",
+        question: "Your work laptop offers a system update. What's the right thing to do?",
+        type: "multiple_choice",
+        options: [
+          "Postpone it indefinitely",
+          "Install it during a convenient time, ideally that day",
+          "Wait until IT installs it for you",
+          "Ignore the prompt",
+        ],
+        correctAnswer: "Install it during a convenient time, ideally that day",
+        explanation:
+          "Security patches close active vulnerabilities. Install updates promptly to keep your device protected.",
+      },
+      {
+        id: "q5-8",
+        moduleId: "module-5",
+        question: "Bluetooth should be turned off when you don't need it on a work device.",
+        type: "true_false",
+        options: ["True", "False"],
+        correctAnswer: "True",
+        explanation:
+          "Open Bluetooth radios can be probed and exploited. Disable wireless services you don't actively use.",
+      },
+      {
+        id: "q5-9",
+        moduleId: "module-5",
+        question: "You're on a video call in a coffee shop. What's the most important precaution?",
+        type: "multiple_choice",
+        options: [
+          "Use noise-cancelling headphones",
+          "Turn on the company VPN and use a privacy screen",
+          "Speak quietly",
+          "Avoid sharing your screen",
+        ],
+        correctAnswer: "Turn on the company VPN and use a privacy screen",
+        explanation:
+          "VPN protects the network, and a privacy screen prevents shoulder-surfing of sensitive information.",
+      },
+      {
+        id: "q5-10",
+        moduleId: "module-5",
+        question: "Personal apps installed on a work device can introduce security risks.",
+        type: "true_false",
+        options: ["True", "False"],
+        correctAnswer: "True",
+        explanation:
+          "Untrusted apps can include trackers, malware, or vulnerabilities. Stick to the IT-approved software list.",
       },
     ],
     createdAt: "2026-01-01T00:00:00Z",

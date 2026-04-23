@@ -274,7 +274,7 @@ export default function ModuleView({ module }: ModuleViewProps) {
             </div>
             <div className="flex items-center gap-1.5">
               <HelpCircle className="h-4 w-4" />
-              <span>{module.questions.length} questions</span>
+              <span>{Math.min(5, module.questions.length)} questions</span>
             </div>
           </div>
         </div>
@@ -378,7 +378,7 @@ export default function ModuleView({ module }: ModuleViewProps) {
             <div>
               <p className="text-[15px] font-semibold text-slate-900">Ready for the quiz?</p>
               <p className="text-sm text-slate-500">
-                Test your knowledge with {module.questions.length} questions.
+                Test your knowledge with {Math.min(5, module.questions.length)} questions.
               </p>
             </div>
             <button

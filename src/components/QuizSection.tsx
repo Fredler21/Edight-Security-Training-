@@ -1,19 +1,40 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { CheckCircle2, XCircle, ChevronRight, RotateCcw } from "lucide-react";
 import { QuizQuestion } from "@/types";
 import { cn } from "@/lib/cn";
 
 // You can miss at most this many questions and still pass.
 const MAX_WRONG_TO_PASS = 1;
+// How many questions to show per attempt (sampled from the pool).
+const QUESTIONS_PER_ATTEMPT = 5;
+
+function sampleQuestions(pool: QuizQuestion[], count: number): QuizQuestion[] {
+  if (pool.length <= count) return [...pool];
+  // Fisher–Yates partial shuffle.
+  const arr = [...pool];
+  for (let i = arr.length - 1; i > arr.length - 1 - count; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr.slice(arr.length - count);
+}
 
 interface QuizSectionProps {
   questions: QuizQuestion[];
   onComplete: (score: number, passed: boolean) => void;
 }
 
-export default function QuizSection({ questions, onComplete }: QuizSectionProps) {
+export default function QuizSection({ questions: pool, onComplete }: QuizSectionProps) {
+  const [attemptKey, setAttemptKey] = useState(0);
+  const questions = useMemo(
+    () => sampleQuestions(pool, QUESTIONS_PER_ATTEMPT),
+    // Re-sample whenever the attempt key changes (initial mount + each retake).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [pool, attemptKey]
+  );
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [checked, setChecked] = useState(false);
@@ -66,6 +87,8 @@ export default function QuizSection({ questions, onComplete }: QuizSectionProps)
     setAnswers([]);
     setFinished(false);
     setFeedback(null);
+    // Bump attempt key so a new random sample is drawn from the pool.
+    setAttemptKey((k) => k + 1);
   }
 
   if (finished) {

@@ -16,27 +16,37 @@ import {
   BookOpen,
   LogIn,
   HelpCircle,
+  RotateCcw,
+  AlertTriangle,
 } from "lucide-react";
 import {
   getUserById,
   getCompletionsForUser,
   getUserProgress,
   getAuditLogs,
+  resetModuleCompletion,
+  resetAllUserProgress,
   AdminUser,
 } from "@/lib/firestore";
 import { modules } from "@/data/modules";
 import type { ModuleCompletion, EmployeeTrainingProgress, AuditLog } from "@/types";
 import ProgressBar from "@/components/ProgressBar";
 import StatusBadge from "@/components/StatusBadge";
+import { useAuth } from "@/context/AuthContext";
 
 export default function EmployeeDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const { user: adminUser } = useAuth();
   const [user, setUser] = useState<AdminUser | null>(null);
   const [completions, setCompletions] = useState<Record<string, ModuleCompletion>>({});
   const [progress, setProgress] = useState<EmployeeTrainingProgress | null>(null);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [resettingModuleId, setResettingModuleId] = useState<string | null>(null);
+  const [resettingAll, setResettingAll] = useState(false);
+  const [resetError, setResetError] = useState<string | null>(null);
+  const [confirmResetAll, setConfirmResetAll] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -88,6 +98,56 @@ export default function EmployeeDetailPage() {
       cancelled = true;
     };
   }, [id]);
+
+  async function refreshProgressData() {
+    if (!id) return;
+    const [c, p, logs] = await Promise.all([
+      getCompletionsForUser(id).catch(() => ({} as Record<string, ModuleCompletion>)),
+      getUserProgress(id).catch(() => null),
+      getAuditLogs(id).catch(() => [] as AuditLog[]),
+    ]);
+    setCompletions(c);
+    setProgress(p);
+    setAuditLogs(logs);
+  }
+
+  async function handleResetModule(moduleId: string, moduleTitle: string) {
+    if (!id) return;
+    if (!confirm(`Reset progress for "${moduleTitle}"? The employee will need to retake the quiz.`)) {
+      return;
+    }
+    setResettingModuleId(moduleId);
+    setResetError(null);
+    try {
+      await resetModuleCompletion(id, moduleId, modules.length, adminUser?.uid, moduleTitle);
+      await refreshProgressData();
+    } catch (err) {
+      console.error("Failed to reset module", err);
+      setResetError(
+        err instanceof Error ? err.message : "Could not reset this module."
+      );
+    } finally {
+      setResettingModuleId(null);
+    }
+  }
+
+  async function handleResetAll() {
+    if (!id) return;
+    setResettingAll(true);
+    setResetError(null);
+    try {
+      await resetAllUserProgress(id, modules.length, adminUser?.uid);
+      await refreshProgressData();
+      setConfirmResetAll(false);
+    } catch (err) {
+      console.error("Failed to reset all progress", err);
+      setResetError(
+        err instanceof Error ? err.message : "Could not reset progress."
+      );
+    } finally {
+      setResettingAll(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -190,12 +250,51 @@ export default function EmployeeDetailPage() {
 
       {/* Overall progress bar */}
       <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 mb-6">
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-3 flex-wrap gap-3">
           <h2 className="text-[15px] font-semibold text-slate-900">Training Progress</h2>
-          <span className="text-sm text-slate-500">
-            {progress?.completedModulesCount ?? 0} / {modules.length} modules
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-slate-500">
+              {progress?.completedModulesCount ?? 0} / {modules.length} modules
+            </span>
+            {!confirmResetAll ? (
+              <button
+                type="button"
+                onClick={() => setConfirmResetAll(true)}
+                disabled={resettingAll || (progress?.completedModulesCount ?? 0) === 0}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                Reset All Progress
+              </button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-rose-600 font-medium">Confirm reset?</span>
+                <button
+                  type="button"
+                  onClick={handleResetAll}
+                  disabled={resettingAll}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-rose-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-rose-700 transition-colors disabled:opacity-50"
+                >
+                  {resettingAll ? "Resetting…" : "Yes, reset all"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmResetAll(false)}
+                  disabled={resettingAll}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+          </div>
         </div>
+        {resetError && (
+          <div className="mb-3 flex items-start gap-2 rounded-lg bg-rose-50 border border-rose-200 px-3 py-2 text-xs text-rose-700">
+            <AlertTriangle className="h-3.5 w-3.5 mt-0.5 flex-shrink-0" />
+            {resetError}
+          </div>
+        )}
         <ProgressBar value={overallPercent} size="lg" />
       </div>
 
@@ -239,22 +338,39 @@ export default function EmployeeDetailPage() {
                     <p className="text-xs text-slate-400">{mod.estimatedMinutes} min</p>
                   )}
                 </div>
-                <div className="flex-shrink-0 text-right">
-                  {completion?.score != null ? (
-                    <>
-                      <p className="text-xs text-slate-400">Quiz Score</p>
-                      <p
-                        className={`text-sm font-bold ${
-                          completion.score >= 75 ? "text-teal-600" : "text-amber-600"
-                        }`}
-                      >
-                        {completion.score}%
-                      </p>
-                    </>
-                  ) : (
-                    <span className="text-xs text-slate-400">
-                      {completed ? "No score" : "Not started"}
-                    </span>
+                <div className="flex-shrink-0 text-right flex items-center gap-3">
+                  <div>
+                    {completion?.score != null ? (
+                      <>
+                        <p className="text-xs text-slate-400">Quiz Score</p>
+                        <p
+                          className={`text-sm font-bold ${
+                            completion.score >= 75 ? "text-teal-600" : "text-amber-600"
+                          }`}
+                        >
+                          {completion.score}%
+                        </p>
+                      </>
+                    ) : (
+                      <span className="text-xs text-slate-400">
+                        {completed ? "No score" : "Not started"}
+                      </span>
+                    )}
+                  </div>
+                  {(completed || completion) && (
+                    <button
+                      type="button"
+                      onClick={() => handleResetModule(mod.id, mod.title)}
+                      disabled={resettingModuleId === mod.id}
+                      title="Reset this module's score"
+                      className="inline-flex items-center justify-center h-8 w-8 rounded-lg border border-slate-200 bg-white text-slate-500 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {resettingModuleId === mod.id ? (
+                        <RotateCcw className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <RotateCcw className="h-3.5 w-3.5" />
+                      )}
+                    </button>
                   )}
                 </div>
               </div>

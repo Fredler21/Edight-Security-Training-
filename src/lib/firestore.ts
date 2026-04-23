@@ -300,3 +300,73 @@ export async function getAllModuleCompletions(): Promise<ModuleCompletion[]> {
   const snap = await getDocs(collection(db, "moduleCompletions"));
   return snap.docs.map((d) => d.data() as ModuleCompletion);
 }
+
+// ─── Admin — Reset Employee Progress ─────────────────────────────────────────
+
+/**
+ * Delete a single module's completion for an employee. Admin only.
+ * Best-effort recalculates the user's overall progress afterward.
+ */
+export async function resetModuleCompletion(
+  userId: string,
+  moduleId: string,
+  totalModules: number,
+  adminUserId?: string,
+  moduleTitle?: string
+): Promise<void> {
+  await deleteDoc(doc(db, "moduleCompletions", `${userId}_${moduleId}`));
+
+  try {
+    await recalculateUserProgress(userId, totalModules);
+  } catch (err) {
+    console.warn("Progress recalculation failed (non-fatal)", err);
+  }
+
+  // Best-effort audit log so the reset is traceable.
+  try {
+    await addDoc(collection(db, "auditLogs"), {
+      userId: adminUserId ?? userId,
+      action: "module_completed",
+      moduleId,
+      moduleTitle: moduleTitle ?? moduleId,
+      details: `Admin reset progress for user ${userId}`,
+      timestamp: serverTimestamp(),
+    });
+  } catch (err) {
+    console.warn("Audit log write failed (non-fatal)", err);
+  }
+}
+
+/**
+ * Reset ALL module completions for an employee and clear their overall progress.
+ * Admin only.
+ */
+export async function resetAllUserProgress(
+  userId: string,
+  totalModules: number,
+  adminUserId?: string
+): Promise<void> {
+  const q = query(
+    collection(db, "moduleCompletions"),
+    where("userId", "==", userId)
+  );
+  const snap = await getDocs(q);
+  await Promise.all(snap.docs.map((d) => deleteDoc(d.ref)));
+
+  try {
+    await recalculateUserProgress(userId, totalModules);
+  } catch (err) {
+    console.warn("Progress recalculation failed (non-fatal)", err);
+  }
+
+  try {
+    await addDoc(collection(db, "auditLogs"), {
+      userId: adminUserId ?? userId,
+      action: "module_completed",
+      details: `Admin reset ALL progress for user ${userId}`,
+      timestamp: serverTimestamp(),
+    });
+  } catch (err) {
+    console.warn("Audit log write failed (non-fatal)", err);
+  }
+}

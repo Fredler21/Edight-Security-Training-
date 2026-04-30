@@ -63,7 +63,7 @@ Even the strongest password can be stolen. That's why MFA adds a second verifica
 - Never share your password with anyone, including IT staff
 - EdLight IT will never ask for your password
 - If you need to give someone access, use permission settings in the relevant system
-- If you suspect your password has been compromised, contact **Fredler (IT Department)**
+- If you suspect your password has been compromised, contact **Fredler — Cybersecurity Department** (fred.pierre-louis@edlight.org)
     `,
     keyTakeaways: [
       "Use passwords that are at least 14 characters long and fully unique.",
@@ -77,7 +77,7 @@ Even the strongest password can be stolen. That's why MFA adds a second verifica
       scenario:
         "Williamson Michel, EdLight's Operations Manager, used the same password for his work email, a project management tool, and a personal shopping account. When the shopping site was breached, attackers used that password to access his work email, then reset passwords for EdLight's financial reporting tools.",
       lesson:
-        "One reused password exposed the entire organization. If each account had a unique password and MFA was enabled, the breach would have been stopped at the first login attempt. Report any suspected account compromise to Fredler (IT Department) immediately.",
+        "One reused password exposed the entire organization. If each account had a unique password and MFA was enabled, the breach would have been stopped at the first login attempt. Report any suspected account compromise to Fredler — Cybersecurity Department (fred.pierre-louis@edlight.org) immediately.",
     },
     questions: [
       {
@@ -273,7 +273,7 @@ Be suspicious if an email:
 If you accidentally clicked a suspicious link or entered credentials:
 
 1. Disconnect from the network immediately if possible
-2. Report it to **Fredler (IT Department)**
+2. Report it to **Fredler — Cybersecurity Department** (fred.pierre-louis@edlight.org)
 3. Change the password for any account you entered credentials into
 4. Do not try to "fix it yourself" — report it right away
 
@@ -283,7 +283,7 @@ If you accidentally clicked a suspicious link or entered credentials:
       "Phishing attacks impersonate trusted sources to steal information.",
       "Look for urgency, mismatched sender domains, and suspicious links.",
       "Hover over links before clicking to preview the real URL.",
-      "Report all suspicious emails to Fredler (IT Department).",
+      "Report all suspicious emails to Fredler — Cybersecurity Department (fred.pierre-louis@edlight.org).",
       "If you clicked something suspicious, report it to Fredler immediately — do not wait.",
     ],
     realLifeExample: {
@@ -291,7 +291,7 @@ If you accidentally clicked a suspicious link or entered credentials:
       scenario:
         "Herode Metellus, EdLight's Fundraising Coordinator, received an urgent email appearing to come from Stevenson Michel (Co-Founder & CEO) asking him to wire $8,000 to a vendor immediately and keep it confidential. The email domain was slightly misspelled: 'stevenson@edl1ght.org'. Herode transferred the funds before calling Stevenson to verify.",
       lesson:
-        "Always verify unusual requests — especially involving money or sensitive data — through a separate channel like a direct phone call. A quick call to Stevenson would have prevented the loss. Any suspicious email must be reported to Fredler (IT Department).",
+        "Always verify unusual requests — especially involving money or sensitive data — through a separate channel like a direct phone call. A quick call to Stevenson would have prevented the loss. Any suspicious email must be reported to Fredler — Cybersecurity Department (fred.pierre-louis@edlight.org).",
     },
     questions: [
       {
@@ -512,9 +512,9 @@ Browser extensions can be powerful, but they can also be malicious.
     realLifeExample: {
       title: "The Fake Software Update",
       scenario:
-        "Tchedly Alexis, EdLight's Marketing & Outreach Coordinator, was browsing a news site when a pop-up appeared saying 'Your browser is out of date — click here to update.' She clicked and downloaded what looked like a browser update. It was malware that silently logged keystrokes, including her EdLight credentials, for two weeks before Fredler (IT Department) detected unusual login activity during a routine security audit.",
+        "Tchedly Alexis, EdLight's Marketing & Outreach Coordinator, was browsing a news site when a pop-up appeared saying 'Your browser is out of date — click here to update.' She clicked and downloaded what looked like a browser update. It was malware that silently logged keystrokes, including her EdLight credentials, for two weeks before Fredler — Cybersecurity Department (fred.pierre-louis@edlight.org) detected unusual login activity during a routine security audit.",
       lesson:
-        "Legitimate browser updates come from the browser or from Fredler's IT team — never from a website pop-up. If you see anything suspicious while browsing, close the tab and report it to Fredler at Fredler (IT Department) immediately.",
+        "Legitimate browser updates come from the browser or from the Cybersecurity Department — never from a website pop-up. If you see anything suspicious while browsing, close the tab and report it to Fredler — Cybersecurity Department (fred.pierre-louis@edlight.org) immediately.",
     },
     questions: [
       {
@@ -694,7 +694,7 @@ This limits the damage that can occur if an account is compromised and reduces t
 When an employee leaves or changes roles:
 
 - Access should be revoked or adjusted immediately
-- Administrators are required to report departures or role changes to **Fredler (IT Department)** on the same day
+- Administrators are required to report departures or role changes to **Fredler — Cybersecurity Department** (fred.pierre-louis@edlight.org) on the same day
 - If you notice a former colleague still has active access, report it to Fredler immediately
 
 ### Physical Access
@@ -704,7 +704,7 @@ Digital security extends to physical spaces:
 - Do not let visitors, contractors, or unauthorized individuals follow you through secured doors (tailgating)
 - Lock your workstation whenever you step away, even briefly
 - Do not allow others to view your screen in sensitive areas
-- Report any physical security concerns to Fredler (IT Department) or facility management
+- Report any physical security concerns to Fredler — Cybersecurity Department (fred.pierre-louis@edlight.org) or facility management
 
 !!ILLUS:tailgating|Tailgating: someone slipping through a secured door behind you. Always require a badge.
 
@@ -738,9 +738,9 @@ Never share Confidential data outside of authorized channels. When in doubt, tre
     realLifeExample: {
       title: "The Shared Login",
       scenario:
-        "Rony Francillon (Director of ESLP & EdLight Nexus) and Stéphane Lainé (Lead Developer, EdLight Labs) shared login credentials to a reporting dashboard because requesting individual access 'took too long.' When Rony transitioned roles, the shared credentials were never updated. Months later, those credentials were used by an unknown party to export sensitive EdLight data — discovered only after Fredler (IT Department) flagged the anomalous access in the audit logs.",
+        "Rony Francillon (Director of ESLP & EdLight Nexus) and Stéphane Lainé (Lead Developer, EdLight Labs) shared login credentials to a reporting dashboard because requesting individual access 'took too long.' When Rony transitioned roles, the shared credentials were never updated. Months later, those credentials were used by an unknown party to export sensitive EdLight data — discovered only after Fredler — Cybersecurity Department (fred.pierre-louis@edlight.org) flagged the anomalous access in the audit logs.",
       lesson:
-        "Shared accounts make accountability impossible and access revocation unreliable. Every team member must have individual credentials. Any access irregularities must be reported to Fredler (IT Department) immediately.",
+        "Shared accounts make accountability impossible and access revocation unreliable. Every team member must have individual credentials. Any access irregularities must be reported to Fredler — Cybersecurity Department (fred.pierre-louis@edlight.org) immediately.",
     },
     questions: [
       {
@@ -916,7 +916,7 @@ Software updates often contain critical security patches that fix known vulnerab
 Every company device must have disk encryption enabled (e.g., FileVault on Mac, BitLocker on Windows). Encryption ensures that if a device is lost or stolen, the data on it cannot be read.
 
 - Verify your device has encryption enabled in system settings
-- Report lost or stolen devices to **Fredler (IT Department)** within 1 hour
+- Report lost or stolen devices to **Fredler — Cybersecurity Department** (fred.pierre-louis@edlight.org) within 1 hour
 - IT can remotely wipe a lost device if encryption and MDM are active
 
 !!ILLUS:device-encryption|With disk encryption on, a stolen laptop reveals nothing but scrambled data.
@@ -958,21 +958,21 @@ The office network is managed and monitored by IT. It's the safest place to work
 
 - Company devices must have IT-managed endpoint protection installed
 - Do not disable or bypass security software for any reason
-- Report unusual device behavior (slowness, unexpected activity) to **Fredler (IT Department)** immediately
+- Report unusual device behavior (slowness, unexpected activity) to **Fredler — Cybersecurity Department** (fred.pierre-louis@edlight.org) immediately
     `,
     keyTakeaways: [
       "Always install software and OS updates promptly — they fix critical security vulnerabilities.",
       "Ensure your work device has disk encryption enabled.",
-      "Report lost or stolen devices to Fredler (IT Department) within 1 hour.",
+      "Report lost or stolen devices to Fredler — Cybersecurity Department (fred.pierre-louis@edlight.org) within 1 hour.",
       "Use the EdLight VPN on any non-office network.",
       "Never plug an unknown USB device into a company computer — hand it to Fredler instead.",
     ],
     realLifeExample: {
       title: "The Airport USB Drive",
       scenario:
-        "Ted Jacquet, EdLight's Co-Founder & CFO, found a USB drive in an airport lounge labeled 'EdLight Q4 Board Financials.' Assuming it had been lost by a colleague, he plugged it into his work laptop. The drive silently installed malware that gave attackers remote access to his device — and through it, EdLight's financial systems. Fredler (IT Department) detected the intrusion during a routine network security audit.",
+        "Ted Jacquet, EdLight's Co-Founder & CFO, found a USB drive in an airport lounge labeled 'EdLight Q4 Board Financials.' Assuming it had been lost by a colleague, he plugged it into his work laptop. The drive silently installed malware that gave attackers remote access to his device — and through it, EdLight's financial systems. Fredler — Cybersecurity Department (fred.pierre-louis@edlight.org) detected the intrusion during a routine network security audit.",
       lesson:
-        "Attackers deliberately label USB drives with enticing titles and leave them in high-traffic areas. Never plug in a device you didn't prepare yourself. If you find one, hand it directly to Fredler (IT Department) without plugging it in.",
+        "Attackers deliberately label USB drives with enticing titles and leave them in high-traffic areas. Never plug in a device you didn't prepare yourself. If you find one, hand it directly to Fredler — Cybersecurity Department (fred.pierre-louis@edlight.org) without plugging it in.",
     },
     questions: [
       {

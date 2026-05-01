@@ -395,12 +395,12 @@ export default function ModuleView({ module }: ModuleViewProps) {
             </ul>
           </div>
 
-          {/* Real-Life Example */}
+          {/* Real Life Example */}
           <div className="mt-6 bg-amber-50 border border-amber-100 rounded-2xl p-6">
             <div className="flex items-center gap-2 mb-3">
               <AlertTriangle className="h-5 w-5 text-amber-600" />
               <h3 className="text-[15px] font-semibold text-amber-900">
-                Real-Life Example: {module.realLifeExample.title}
+                Real Life Example, {module.realLifeExample.title}
               </h3>
             </div>
             <p className="text-sm text-amber-800 leading-relaxed mb-4">
